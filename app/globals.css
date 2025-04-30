@@ -1,26 +1,308 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
   }
 }
 
+  /* Garantir que todos os elementos não causem overflow horizontal */
+  html,
+  body,
+  #__next,
+  main,
+  section,
+  div {
+    max-width: 100%;
+  }
+
+/* Parallax and animation styles */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden; /* Prevenir rolagem horizontal */
+}
+
+/* Container improvements */
+.container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: visible;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  h1,
+  .h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+}
+
+/* Additional responsive helper classes */
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.responsive-padding {
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-padding {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-padding {
+    padding: 2rem;
+  }
+}
+
+/* Adicionar estas regras no final do arquivo para corrigir problemas de animação */
+
+/* Melhorar a performance das animações */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Garantir que as animações não causem overflow */
+.overflow-fix {
+  overflow: hidden;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* Corrigir problemas de layout com animações */
+.animation-container {
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Melhorar a performance de rolagem */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Garantir que todos os elementos não causem overflow horizontal */
+html,
+body,
+#__next,
+main,
+section,
+div {
+  max-width: 90%;
+}
+
+/* Remover todas as barras de rolagem secundárias */
+.overflow-hidden-children * {
+  overflow: visible !important;
+}
+
+/* Garantir que apenas o body tenha rolagem vertical */
+html,
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  width: 100%;
+}
+
+/* Remover rolagem de todos os elementos internos */
+section,
+div,
+main {
+  overflow: visible;
+}
+
+/* Remover qualquer rolagem horizontal */
+body,
+html,
+#__next,
+main,
+section,
+div {
+  max-width: 100vw;
+}
+
+/* Chatbot specific styles to fix rendering issues */
+.chatbot-container {
+  position: relative;
+  z-index: 50;
+  font-family: inherit;
+  max-width: 100vw !important; /* Override your max-width: 90% rule */
+}
+
+.chatbot-container * {
+  max-width: 100% !important; /* Override max-width constraints */
+  overflow: visible !important; /* Ensure no overflow issues in chatbot */
+}
+
+.chatbot-container .prose {
+  max-width: 100%;
+}
+
+.chatbot-container .prose a {
+  color: #0056d2;
+  text-decoration: underline;
+}
+
+.chatbot-container .prose-invert a {
+  color: white;
+  text-decoration: underline;
+}
+
+.chatbot-container .prose h2 {
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.chatbot-container .prose ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+}
+
+.chatbot-container .prose li {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.chatbot-container .prose p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Fix for emoji rendering */
+.chatbot-container .emoji {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  margin: 0 0.05em 0 0.1em;
+  vertical-align: -0.1em;
+}
+
+/* Override your global constraints for the chatbot */
+.chatbot-container,
+.chatbot-container div,
+.chatbot-container section {
+  max-width: 100vw !important;
+  overflow: visible !important;
+}
+
+/* Fix for fixed positioning */
+.chatbot-container .fixed {
+  position: fixed !important;
+  max-width: 100vw !important;
+}
+
+/* Ensure the chat window doesn't get affected by your overflow rules */
+.chatbot-container [role="dialog"] {
+  max-width: 450px !important;
+  overflow: hidden !important;
+}
+
+/* Fix for the chat messages container */
+.chatbot-container [role="dialog"] .overflow-y-auto {
+  overflow-y: auto !important;
+  max-height: 400px !important;
 }
