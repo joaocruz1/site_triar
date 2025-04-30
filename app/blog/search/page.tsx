@@ -5,14 +5,11 @@ import BlogPosts from "@/components/blog/blog-posts"
 
 interface SearchPageProps {
   searchParams: {
-    q?: string
+    q?: string 
   }
 }
 
-export const metadata: Metadata = {
-  title: "Resultados da pesquisa | Triar Contabilidade",
-  description: "Resultados da pesquisa no blog da Triar Contabilidade",
-}
+
 
 export default function SearchPage({ searchParams }: SearchPageProps) {
   const query = searchParams.q || ""

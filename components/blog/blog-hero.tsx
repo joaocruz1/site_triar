@@ -1,7 +1,18 @@
 "use client"
 import AnimateOnScroll from "@/components/shared/animate-on-scroll"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function BlogHero() {
+  const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      router.push(`/blog/search?q=${encodeURIComponent(searchQuery)}`)
+    }
+  }
+
   return (
     <section className="w-full py-16 md:py-24 bg-white relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
@@ -33,8 +44,14 @@ export default function BlogHero() {
                   type="text"
                   placeholder="Pesquisar artigos..."
                   className="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00A7E1]/20 focus:border-[#00A7E1]"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 />
-                <button className="absolute right-1 top-1 bg-[#00A7E1] text-white p-2 rounded-full hover:bg-[#0089b8] transition-colors duration-300">
+                <button 
+                  onClick={handleSearch}
+                  className="absolute right-1 top-1 bg-[#00A7E1] text-white p-2 rounded-full hover:bg-[#0089b8] transition-colors duration-300"
+                >
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
