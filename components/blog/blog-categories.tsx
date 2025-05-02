@@ -14,13 +14,13 @@ export default function BlogCategories() {
   const [savedPosts, setSavedPosts] = useState<number[]>([])
 
   const categories = [
-    { name: "Tributário", count: 12 },
+    { name: "Tributario", count: 12 },
     { name: "Contabilidade", count: 8 },
     { name: "Fiscal", count: 7 },
-    { name: "Legislação", count: 6 },
+    { name: "Legislacao", count: 6 },
     { name: "Departamento Pessoal", count: 5 },
     { name: "Tecnologia", count: 4 },
-    { name: "Gestão Empresarial", count: 3 },
+    { name: "Gestao Empresarial", count: 3 },
   ]
 
   const recentPosts = [
@@ -53,7 +53,7 @@ export default function BlogCategories() {
     "eSocial",
     "ERP",
     "Notas Fiscais",
-    "Balanço",
+    "Balanco",
     "Auditoria",
     "Lucro Real",
     "Lucro Presumido",

@@ -53,7 +53,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="w-full py-6 sm:py-8 md:py-12 lg:py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
+    <section className="w-full py-6 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 z-0 opacity-10">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -96,11 +96,11 @@ export default function Hero() {
           />
         </div>
 
-        <div className="grid gap-6 sm:gap-8 lg:grid-cols-12 items-center relative z-10">
-          {/* Content Column - Takes 7 columns on large screens */}
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-8 items-center relative z-10">
+          {/* Content Column */}
           <div className="lg:col-span-7 flex flex-col justify-center space-y-4 sm:space-y-6 text-center lg:text-left">
             <motion.div
-              className="inline-block bg-[#00A7E1]/10 text-[#00A7E1] px-3 py-1 rounded-full text-xs sm:text-sm font-medium mb-1 sm:mb-2 mx-auto lg:mx-0"
+              className="inline-block bg-[#00A7E1]/10 text-[#00A7E1] px-3 py-1 rounded-full text-xs sm:text-sm font-medium mb-2 mx-auto lg:mx-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -109,7 +109,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.h1
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tighter"
+              className="text-2xl sm:text-3xl font-bold tracking-tighter md:text-4xl xl:text-5xl/none"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -130,6 +130,7 @@ export default function Hero() {
                   wrapper="span"
                   speed={50}
                   repeat={Number.POSITIVE_INFINITY}
+                  className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl"
                 />
                 <motion.svg
                   className="absolute -bottom-1 sm:-bottom-2 left-0 w-full hidden sm:block"
@@ -151,7 +152,7 @@ export default function Hero() {
             </motion.h1>
 
             <motion.p
-              className="text-xs sm:text-sm md:text-base lg:text-lg max-w-[600px] text-gray-500 mt-2 mx-auto lg:mx-0"
+              className="text-xs sm:text-sm max-w-[600px] text-gray-500 md:text-base mt-1 sm:mt-2 mx-auto lg:mx-0 px-2 sm:px-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
@@ -161,34 +162,36 @@ export default function Hero() {
             </motion.p>
 
             <motion.div
-              className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mt-2 sm:mt-4"
+              className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center lg:justify-start mt-3 sm:mt-4 px-4 sm:px-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
                 <Button
-                  className="bg-[#00A7E1] hover:bg-[#0089b8] text-white relative overflow-hidden group w-full h-10 text-sm"
+                  className="bg-[#00A7E1] hover:bg-[#0089b8] text-white relative overflow-hidden group w-full"
                   onClick={() => {
                     document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })
                   }}
+                  size="sm"
                 >
                   <span className="relative z-10 flex items-center">
                     Solicitar Orçamento
-                    <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1" />
                   </span>
                   <span className="absolute inset-0 bg-[#0089b8] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
                 </Button>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
                 <Button
                   variant="outline"
-                  className="border-[#00A7E1] text-[#00A7E1] hover:bg-[#e6f7fd] group w-full h-10 text-sm"
+                  className="border-[#00A7E1] text-[#00A7E1] hover:bg-[#e6f7fd] group w-full"
                   onClick={() => {
                     document.querySelector("#services")?.scrollIntoView({ behavior: "smooth" })
                   }}
+                  size="sm"
                 >
-                  <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
+                  <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300 text-xs sm:text-sm">
                     Conheça Nossos Serviços
                   </span>
                 </Button>
@@ -197,17 +200,17 @@ export default function Hero() {
 
             {/* Benefit tabs */}
             <motion.div
-              className="mt-3 sm:mt-4 bg-white/80 backdrop-blur-sm rounded-xl p-3 shadow-lg"
+              className="mt-3 sm:mt-4 bg-white/80 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-md sm:shadow-lg mx-2 sm:mx-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 }}
             >
-              <div className="flex mb-2 sm:mb-3 overflow-x-auto pb-1 scrollbar-hide">
+              <div className="flex space-x-1 sm:space-x-2 mb-2 sm:mb-3 overflow-x-auto pb-1 sm:pb-2 scrollbar-hide">
                 {benefitTabs.map((tab, index) => (
                   <button
                     key={index}
                     onClick={() => setActiveTab(index)}
-                    className={`flex items-center px-2 py-1 sm:px-3 sm:py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all mr-1 sm:mr-2 flex-shrink-0`}
+                    className={`flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg text-xs font-medium whitespace-nowrap transition-all min-w-fit`}
                     style={{
                       backgroundColor: activeTab === index ? `${tab.color}10` : "",
                       color: activeTab === index ? tab.color : "rgb(107, 114, 128)",
@@ -219,7 +222,7 @@ export default function Hero() {
                 ))}
               </div>
 
-              <div className="min-h-[40px] sm:min-h-[50px] text-xs sm:text-sm">
+              <div className="min-h-[40px] sm:min-h-[60px] text-xs sm:text-sm px-1">
                 {benefitTabs.map((tab, index) => (
                   <motion.div
                     key={index}
@@ -239,59 +242,55 @@ export default function Hero() {
 
             {/* Social proof */}
             <motion.div
-              className="flex items-center justify-center lg:justify-start gap-2 mt-3 sm:mt-4"
+              className="flex items-center justify-center lg:justify-start gap-2 sm:gap-3 mt-3 sm:mt-4 px-2 sm:px-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2 }}
             >
               <div className="flex -space-x-1 sm:-space-x-2">
                 {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-white overflow-hidden"
-                  >
+                  <div key={i} className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-white overflow-hidden">
                     <Image
                       src={`/placeholder.svg?height=40&width=40&text=${i}`}
                       alt={`Cliente ${i}`}
-                      width={40}
-                      height={40}
+                      width={32}
+                      height={32}
                       className="object-cover"
                     />
                   </div>
                 ))}
               </div>
-              <div className="text-xs">
+              <div className="text-xs sm:text-sm">
                 <p className="font-medium">+500 clientes satisfeitos</p>
                 <div className="flex items-center">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-yellow-400"
+                      className="w-2 h-2 sm:w-3 sm:h-3 text-yellow-400"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   ))}
-                  <span className="ml-1 text-gray-500 text-[10px] sm:text-xs">4.9/5</span>
+                  <span className="ml-0.5 text-gray-500 text-xs sm:text-sm">4.9/5</span>
                 </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Image Column - Takes 5 columns on large screens */}
-          <div className="lg:col-span-5 mt-4 lg:mt-0">
+          {/* Image Column - Hidden on smallest screens, appears below content */}
+          <div className="lg:col-span-5 mt-6 lg:mt-0 px-2 sm:px-0">
             <motion.div
               className="relative mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              {/* Creative image layout with overlapping elements */}
-              <div className="relative h-[220px] sm:h-[280px] md:h-[340px] lg:h-[420px]">
+              <div className="relative h-[200px] sm:h-[280px] md:h-[340px] lg:h-[420px]">
                 {/* Main image with hexagon clip path */}
                 <motion.div
-                  className="absolute top-0 right-0 w-[70%] sm:w-[75%] h-[70%] sm:h-[75%] overflow-hidden shadow-xl"
+                  className="absolute top-0 right-0 w-[75%] sm:w-[80%] h-[75%] sm:h-[80%] overflow-hidden shadow-lg sm:shadow-xl"
                   style={{
                     clipPath: "polygon(25% 0%, 100% 0%, 100% 100%, 75% 100%, 0% 50%)",
                     borderRadius: "0.5rem",
@@ -302,11 +301,12 @@ export default function Hero() {
                 >
                   <div className="w-full h-full relative">
                     <Image
-                      src="/gestao.jpg" // Replace with your image path
+                      src="/gestao.jpg"
                       alt="Equipe Triar Contabilidade"
                       fill
                       className="object-cover object-center"
                       priority
+                      sizes="(max-width: 768px) 100vw, 50vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-tr from-[#00A7E1]/30 to-transparent"></div>
                   </div>
@@ -314,89 +314,57 @@ export default function Hero() {
 
                 {/* Secondary image - circular */}
                 <motion.div
-                  className="absolute bottom-0 left-0 w-[35%] sm:w-[40%] h-[35%] sm:h-[40%] rounded-full overflow-hidden border-2 sm:border-4 border-white shadow-lg"
+                  className="absolute bottom-0 left-0 w-[40%] sm:w-[45%] h-[40%] sm:h-[45%] rounded-full overflow-hidden border-2 sm:border-4 border-white shadow-md sm:shadow-lg"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.9, duration: 0.8 }}
                 >
                   <Image
-                    src="/equipe.png" // Updated to use the correct path
+                    src="/equipe.png"
                     alt="Análise Contábil"
                     fill
                     className="object-cover"
+                    sizes="(max-width: 768px) 40vw, 20vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00A7E1]/20"></div>
                 </motion.div>
 
                 {/* Decorative elements */}
                 <motion.div
-                  className="absolute top-[40%] left-[35%] w-[16%] sm:w-[18%] h-[16%] sm:h-[18%] bg-white rounded-lg shadow-lg flex items-center justify-center p-1 sm:p-2 z-10"
+                  className="absolute top-[40%] left-[35%] w-[18%] sm:w-[20%] h-[18%] sm:h-[20%] bg-white rounded-md sm:rounded-lg shadow-md sm:shadow-lg flex items-center justify-center p-1 sm:p-2 z-10"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.1, duration: 0.8 }}
-                  whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                  whileHover={{ y: -3, boxShadow: "0 10px 15px -5px rgba(0, 0, 0, 0.1)" }}
                 >
                   <div className="text-center">
                     <div className="text-[#00A7E1] font-bold text-sm sm:text-lg">32%</div>
-                    <div className="text-[8px] sm:text-[10px] text-gray-500">Economia</div>
+                    <div className="text-[8px] sm:text-xs text-gray-500">Economia</div>
                   </div>
                 </motion.div>
 
                 {/* Floating technology badge */}
                 <motion.div
-                  className="absolute top-1 sm:top-2 right-1 sm:right-2 bg-white/90 backdrop-blur-sm px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full shadow-lg z-20"
+                  className="absolute top-1 sm:top-2 right-1 sm:right-2 bg-white/90 backdrop-blur-sm px-1 sm:px-2 py-0.5 sm:py-1 rounded-full shadow-sm sm:shadow-md z-20"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1.3, type: "spring" }}
                 >
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5 sm:gap-1">
                     <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-[8px] sm:text-[10px] font-medium">Tecnologia Avançada</span>
+                    <span className="text-[8px] sm:text-xs font-medium">Tecnologia Avançada</span>
                   </div>
                 </motion.div>
 
-                {/* Abstract decorative elements - hidden on very small screens */}
-                <svg
-                  className="absolute -bottom-10 -left-10 w-24 sm:w-32 md:w-40 h-24 sm:h-32 md:h-40 text-[#00A7E1]/10 z-0 hidden sm:block"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M45.7,-52.2C59.9,-41.8,72.3,-28.5,76.8,-12.3C81.3,3.9,77.9,23,68.2,38.5C58.5,54,42.5,65.9,24.4,71.3C6.3,76.7,-13.9,75.5,-31.5,68.1C-49.2,60.7,-64.2,47,-72.1,29.8C-80,12.5,-80.9,-8.3,-73.1,-24.8C-65.4,-41.3,-49.1,-53.5,-33.3,-63.2C-17.6,-72.8,-2.4,-79.9,11.2,-77.5C24.8,-75.1,31.5,-62.5,45.7,-52.2Z"
-                    transform="translate(100 100)"
-                  />
-                </svg>
-
-                {/* Animated dots - hidden on very small screens */}
-                <div className="absolute right-[10%] top-[10%] hidden sm:block">
-                  <div className="grid grid-cols-3 gap-0.5">
-                    {[...Array(9)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#00A7E1]"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0, 1, 0] }}
-                        transition={{
-                          duration: 2,
-                          repeat: Number.POSITIVE_INFINITY,
-                          delay: i * 0.1,
-                          ease: "easeInOut",
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-
                 {/* Floating card with stats */}
                 <motion.div
-                  className="absolute -bottom-2 sm:-bottom-4 right-2 sm:right-4 bg-white rounded-lg shadow-xl p-1.5 sm:p-2 z-20"
+                  className="absolute -bottom-2 sm:-bottom-3 right-2 sm:right-4 bg-white rounded-md sm:rounded-lg shadow-sm sm:shadow-md p-1 sm:p-2 z-20"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.5 }}
-                  whileHover={{ y: -5, boxShadow: "0 25px 30px -12px rgba(0, 0, 0, 0.15)" }}
+                  whileHover={{ y: -3, boxShadow: "0 10px 15px -5px rgba(0, 0, 0, 0.1)" }}
                 >
-                  <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <div className="w-6 h-6 sm:w-8 sm:h-8 bg-[#00A7E1]/20 rounded-full flex items-center justify-center">
                       <svg
                         className="w-3 h-3 sm:w-4 sm:h-4 text-[#00A7E1]"
@@ -414,7 +382,7 @@ export default function Hero() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-[8px] sm:text-[10px] text-gray-500">Clientes atendidos</p>
+                      <p className="text-[8px] sm:text-xs text-gray-500">Clientes atendidos</p>
                       <p className="font-bold text-xs sm:text-sm text-[#00A7E1]">
                         <CountUp end={500} duration={2} suffix="+" />
                       </p>
@@ -440,7 +408,6 @@ export default function Hero() {
   )
 }
 
-// Componente de contador animado
 function CountUp({ end, duration = 2, suffix = "" }: CountUpType) {
   const [count, setCount] = useState(0)
 
