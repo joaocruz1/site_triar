@@ -99,7 +99,7 @@ export default function BlogPost({ slug }: BlogPostProps) {
         `,
         excerpt:
           "Descubra estratégias legais para reduzir a carga tributária da sua empresa e aumentar a lucratividade do seu negócio.",
-        image: "/placeholder.svg?height=500&width=1000",
+        image: "https://images.pexels.com/photos/6863254/pexels-photo-6863254.jpeg?height=500&width=1000",
         date: "15 de abril de 2023",
         author: {
           name: "Carlos Oliveira",
@@ -386,7 +386,6 @@ export default function BlogPost({ slug }: BlogPostProps) {
 
   return (
     <>
-      <Header />
       {/* Barra de progresso de leitura fixa no topo */}
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-100 z-50">
         <motion.div
@@ -990,7 +989,7 @@ export default function BlogPost({ slug }: BlogPostProps) {
                   {post.tags.map((tag: string, index: number) => (
                     <Link key={index} href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}>
                       <Badge variant="outline" className="hover:bg-gray-100 transition-colors py-1.5 px-3">
-                        #{tag}
+                        {tag}
                       </Badge>
                     </Link>
                   ))}

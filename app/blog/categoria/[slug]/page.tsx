@@ -1,44 +1,53 @@
 import type { Metadata } from "next"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
 import BlogPosts from "@/components/blog/blog-posts"
+import BlogCategories from "@/components/blog/blog-categories"
+import BlogNewsletter from "@/components/blog/blog-newsletter"
+import ParallaxProvider from "@/components/shared/parallax-provider"
+import AnimatedBackground from "@/components/shared/animated-background"
 
-interface CategoryPageProps {
-  params: {
-    slug: string
-  }
+type Props = {
+  params: Promise<{ category: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  // Capitalize first letter of category
-  const categoryName = params.slug.charAt(0).toUpperCase() + params.slug.slice(1)
+// Fix the generateMetadata function to handle undefined values
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params
+  const category = params.category || ""
+  // Safely format the category with a fallback
+  const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1)
 
   return {
-    title: `Artigos sobre ${categoryName} | Triar Contabilidade`,
-    description: `Confira nossos artigos e conteúdos sobre ${categoryName} para empresas e empreendedores.`,
+    title: `${formattedCategory} | Blog Triar Contabilidade`,
+    description: `Artigos sobre ${formattedCategory.toLowerCase()} - Triar Contabilidade`,
   }
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  // Capitalize first letter of category
-  const categoryName = params.slug.charAt(0).toUpperCase() + params.slug.slice(1)
+export default async function CategoryPage(props: Props) {
+  const params = await props.params
+  const category = params.category
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4">Categoria: {categoryName}</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Confira todos os nossos artigos e conteúdos sobre {categoryName} para ajudar sua empresa a crescer.
-        </p>
-      </div>
-
-      <div className="mb-8 flex justify-center">
-        <Button variant="outline" asChild>
-          <Link href="/blog">Voltar para o Blog</Link>
-        </Button>
-      </div>
-
-      <BlogPosts initialFilter={params.slug} />
-    </div>
+    <ParallaxProvider>
+      <main className="min-h-screen">
+        <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
+        <Header />
+        <div className="container px-4 md:px-6 py-12 md:py-24">
+          <h1 className="text-3xl font-bold mb-8">Categoria: {category}</h1>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2">
+              <BlogPosts initialFilter={category} />
+            </div>
+            <div className="space-y-12">
+              <BlogCategories />
+              <BlogNewsletter />
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    </ParallaxProvider>
   )
 }
