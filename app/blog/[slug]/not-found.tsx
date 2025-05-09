@@ -12,7 +12,7 @@ export default function NotFound() {
         </Button>
         <Button asChild variant="outline">
           <Link href="/">Página Inicial</Link>
-        </Button>
+        </Button> 
       </div>
     </div>
   )
