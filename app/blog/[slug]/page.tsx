@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import BlogPost from "@/components/blog/blog-post"
-import ParallaxProvider from "@/components/shared/parallax-provider"
 import AnimatedBackground from "@/components/shared/animated-background"
 
 type Props = {
@@ -78,13 +77,11 @@ export default async function BlogPostPage(props: Props) {
   const slug = params.slug
 
   return (
-    <ParallaxProvider>
       <main className="min-h-screen">
         <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
         <Header />
         <BlogPost slug={slug} />
         <Footer />
       </main>
-    </ParallaxProvider>
   )
 }
