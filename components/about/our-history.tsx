@@ -20,7 +20,7 @@ export default function OurHistory() {
       icon: <Calendar className="h-5 w-5" />,
       color: "#00A7E1",
       achievement: "Primeiros 50 clientes conquistados",
-      image: "/placeholder.svg?height=200&width=300&text=Fundação+2010",
+      image: "/img/about/fundacao-about.png?text=Fundação+2010",
     },
     {
       year: "2013",
@@ -30,7 +30,7 @@ export default function OurHistory() {
       icon: <Users className="h-5 w-5" />,
       color: "#4CAF50",
       achievement: "Equipe ampliada para 15 profissionais",
-      image: "/placeholder.svg?height=200&width=300&text=Expansão+2013",
+      image: "/img/about/expansao-about.png?text=Expansão+2013",
     },
     {
       year: "2016",
@@ -40,7 +40,7 @@ export default function OurHistory() {
       icon: <Lightbulb className="h-5 w-5" />,
       color: "#FF9800",
       achievement: "Redução de 60% no tempo de processamento",
-      image: "/placeholder.svg?height=200&width=300&text=Digitalização+2016",
+      image: "/img/about/digitalizacao-about.png?text=Digitalização+2016",
     },
     {
       year: "2019",
@@ -50,7 +50,7 @@ export default function OurHistory() {
       icon: <Award className="h-5 w-5" />,
       color: "#9C27B0",
       achievement: "Certificação ISO 9001 conquistada",
-      image: "/placeholder.svg?height=200&width=300&text=Certificação+2019",
+      image: "/img/about/certificacao-about.png?text=Certificação+2019",
     },
     {
       year: "2022",
@@ -60,7 +60,7 @@ export default function OurHistory() {
       icon: <Building className="h-5 w-5" />,
       color: "#F44336",
       achievement: "1000m² de espaço moderno e sustentável",
-      image: "/placeholder.svg?height=200&width=300&text=Novo+Escritório+2022",
+      image: "/img/about/escritorio-about.png?text=Novo+Escritório+2022",
     },
   ]
 
@@ -231,6 +231,10 @@ export default function OurHistory() {
                         alt={`${event.title} - ${event.year}`}
                         fill
                         className="object-cover"
+                        quality={90}  
+                        priority={true}  
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, 600px"  
+                        unoptimized={false}  
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 p-4 text-white">

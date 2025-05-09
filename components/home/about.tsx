@@ -22,21 +22,22 @@ export default function About() {
 
       <div className="container px-4 md:px-6 relative z-10">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
-          <div className="flex items-center justify-center order-2 lg:order-1">
+          <div className="flex-1/2 items-center justify-center order-2 lg:order-1">
             <AnimateOnScroll variant="fade-right" duration={0.8}>
               <div className="relative h-[400px] w-full">
-                <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-xl">
-                  <Image
-                    src="/placeholder.svg?height=400&width=600"
-                    alt="Sobre a Triar Contabilidade"
-                    fill
-                    className="object-cover"
-                  />
+                <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-xl bg-gray-200">
+                <Image
+                  src="/img/home/about-home.png"
+                  alt="Sobre a Triar Contabilidade"
+                  fill
+                  className="object-cover"
+                  quality={100} 
+                  priority 
+                  sizes="(max-width: 768px) 100vw, 50vw" 
+                />
                 </div>
 
-                {/* Decorative elements */}
-                <div className="absolute -bottom-5 -right-5 w-32 h-32 bg-[#00A7E1]/10 rounded-full"></div>
-                <div className="absolute -top-5 -left-5 w-24 h-24 border-2 border-[#00A7E1]/20 rounded-full"></div>
+
 
                 {/* Floating badge */}
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">

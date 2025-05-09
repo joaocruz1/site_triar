@@ -51,10 +51,13 @@ export default function ServicesHero() {
             <div className="relative">
               <div className="relative h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-xl">
                 <Image
-                  src="/placeholder.svg?height=400&width=600"
+                  src="/img/services/hero-services.png"
                   alt="Serviços Triar Contabilidade"
                   fill
                   className="object-cover"
+                  quality={100} 
+                  priority 
+                  sizes="(max-width: 768px) 100vw, 50vw" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 w-full p-6 text-white">

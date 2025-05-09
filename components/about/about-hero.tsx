@@ -33,10 +33,13 @@ export default function AboutHero() {
             <div className="mt-10 relative">
               <div className="relative h-[300px] w-full md:h-[400px] md:w-[700px] rounded-xl overflow-hidden shadow-xl">
                 <Image
-                  src="/placeholder.svg?height=400&width=700"
+                  src="/img/about/about-hero.png"
                   alt="Equipe Triar Contabilidade"
                   fill
                   className="object-cover"
+                  quality={100} 
+                  priority 
+                  sizes="(max-width: 768px) 100vw, 50vw" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 w-full p-6 text-white">
