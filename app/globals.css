@@ -73,7 +73,6 @@ body {
   width: 100%;
   max-width: 100%;
 }
-
 /* Prevent individual components from scrolling */
 section,
 div,
@@ -81,7 +80,9 @@ main {
   overflow: visible;
   max-width: 100%;
 }
-
+body > * {
+  overflow: hidden !important; /* Bloqueia rolagem em TODOS os filhos diretos do body */
+}
 /* Container improvements */
 .container {
   width: 100%;

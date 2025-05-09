@@ -1,6 +1,5 @@
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
-import ParallaxProvider from "@/components/shared/parallax-provider"
 import AnimatedBackground from "@/components/shared/animated-background"
 import AboutHero from "@/components/about/about-hero"
 import OurHistory from "@/components/about/our-history"
@@ -25,7 +24,6 @@ export const metadata = {
 
 export default function SobrePage() {
   return (
-    <ParallaxProvider>
       <main className="min-h-screen">
         <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
         <Header />
@@ -36,6 +34,5 @@ export default function SobrePage() {
         <CallToAction />
         <Footer />
       </main>
-    </ParallaxProvider>
   )
 }

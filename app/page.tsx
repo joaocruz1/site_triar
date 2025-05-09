@@ -4,7 +4,6 @@ import Services from "@/components/home/services"
 import About from "@/components/home/about"
 import CallToAction from "@/components/shared/call-to-action"
 import Footer from "@/components/layout/footer"
-import ParallaxProvider from "@/components/shared/parallax-provider"
 import AnimatedBackground from "@/components/shared/animated-background"
 import dynamic from "next/dynamic"
 
@@ -19,7 +18,6 @@ const DynamicTestimonials = dynamic(() => import("@/components/home/testimonials
   loading: () => <div className="w-full py-12 md:py-24 bg-white"></div>,
 })
 
-// Carregar seções interativas dinamicamente
 const DynamicInteractiveSections = dynamic(() => import("@/components/interactive/interactive-sections"), {
   ssr: true,
   loading: () => <div className="w-full py-16 md:py-24 bg-gray-50"></div>,
@@ -27,7 +25,7 @@ const DynamicInteractiveSections = dynamic(() => import("@/components/interactiv
 
 export default function Home() {
   return (
-    <ParallaxProvider>
+
       <main className="min-h-screen w-full">
         <AnimatedBackground color="rgba(0, 167, 225, 0.2)" density={20} />
         <Header />
@@ -40,6 +38,6 @@ export default function Home() {
         <CallToAction />
         <Footer />
       </main>
-    </ParallaxProvider>
+
   )
 }

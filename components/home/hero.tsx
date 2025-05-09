@@ -95,7 +95,7 @@ export default function Hero() {
           {/* Mobile Image - Single clean image */}
           <div className="relative w-full h-48 mb-6 rounded-lg overflow-hidden shadow-md">
             <Image
-              src="/gestao.jpg"
+              src="/img/home/gestao.jpg"
               alt="Contabilidade Digital"
               fill
               className="object-cover object-center"

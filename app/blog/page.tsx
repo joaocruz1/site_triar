@@ -4,7 +4,6 @@ import Footer from "@/components/layout/footer"
 import BlogPosts from "@/components/blog/blog-posts"
 import BlogCategories from "@/components/blog/blog-categories"
 import BlogNewsletter from "@/components/blog/blog-newsletter"
-import ParallaxProvider from "@/components/shared/parallax-provider"
 import AnimatedBackground from "@/components/shared/animated-background"
 
 type Props = {
@@ -30,7 +29,6 @@ export default async function TagPage(props: Props) {
   const tag = params.tag
 
   return (
-    <ParallaxProvider>
       <main className="min-h-screen">
         <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
         <Header />
@@ -48,6 +46,5 @@ export default async function TagPage(props: Props) {
         </div>
         <Footer />
       </main>
-    </ParallaxProvider>
   )
 }
