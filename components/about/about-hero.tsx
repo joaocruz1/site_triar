@@ -13,7 +13,7 @@ export default function AboutHero() {
       </div>
 
       <div className="container px-4 md:px-6 relative z-10">
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
+        <div className="flex-col items-center text-center max-w-3xl mx-auto">
           <AnimateOnScroll variant="fade-up" duration={0.8}>
             <div className="space-y-4">
               <div className="inline-block bg-[#00A7E1]/10 text-[#00A7E1] px-3 py-1 rounded-full text-sm font-medium mb-2">
@@ -31,7 +31,7 @@ export default function AboutHero() {
 
           <AnimateOnScroll variant="fade-up" delay={200} duration={0.8}>
             <div className="mt-10 relative">
-              <div className="relative h-[300px] w-full md:h-[400px] md:w-[700px] rounded-xl overflow-hidden shadow-xl">
+              <div className="relative h-[300px] w-full m-auto md:h-[400px] md:w-[700px] rounded-xl overflow-hidden shadow-xl">
                 <Image
                   src="/img/about/about-hero.png"
                   alt="Equipe Triar Contabilidade"

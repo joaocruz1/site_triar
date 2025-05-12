@@ -452,7 +452,7 @@ export default function Hero() {
                 >
                   <div className="w-full h-full relative">
                     <Image
-                      src="/gestao.jpg"
+                      src="/img/home/gestao.jpg"
                       alt="Equipe Triar Contabilidade"
                       fill
                       className="object-cover object-center"
@@ -471,7 +471,7 @@ export default function Hero() {
                   transition={{ delay: 0.9, duration: 0.8 }}
                 >
                   <Image
-                    src="/equipe.png"
+                    src="/img/home/equipe.png"
                     alt="Análise Contábil"
                     fill
                     className="object-cover"
