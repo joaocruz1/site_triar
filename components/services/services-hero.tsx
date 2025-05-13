@@ -48,8 +48,8 @@ export default function ServicesHero() {
           </AnimateOnScroll>
 
           <AnimateOnScroll variant="fade-left" duration={0.8}>
-            <div className="relative">
-              <div className="relative h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-xl">
+            <div className="relative flex justify-center ">
+              <div className="relative w-full m-auto h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-xl">
                 <Image
                   src="/img/services/hero-services.png"
                   alt="Serviços Triar Contabilidade"

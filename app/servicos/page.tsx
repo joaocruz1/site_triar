@@ -2,7 +2,6 @@
 
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
-import AnimatedBackground from "@/components/shared/animated-background"
 import ServicesHero from "@/components/services/services-hero"
 import ServiceProcess from "@/components/services/services-process"
 import CallToAction from "@/components/shared/call-to-action"
@@ -27,7 +26,6 @@ export const metadata = {
 export default function ServicosPage() {
   return (
       <main className="min-h-screen">
-        <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
         <Header />
         <ServicesHero />
         <DynamicServicesList />

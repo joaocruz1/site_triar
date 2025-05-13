@@ -15,12 +15,8 @@ export default function About() {
 
   return (
     <section id="about" className="w-full py-12 md:py-24 bg-white relative overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-[#00A7E1]/5 rounded-full blur-3xl"></div>
-      </div>
 
-      <div className="container px-4 md:px-6 relative z-10">
+      <div className="container m-auto px-4 md:px-6 relative z-10">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           <div className="flex-1/2 items-center justify-center order-2 lg:order-1">
             <AnimateOnScroll variant="fade-right" duration={0.8}>
