@@ -63,7 +63,7 @@ export default function CallToAction() {
   return (
     <section
       id="contact"
-      className="w-full py-16 md:py-24 bg-gradient-to-br from-[#00A7E1] to-[#0077B6] text-white relative overflow-hidden"
+      className="w-full py-12 md:py-16 lg:py-24 bg-gradient-to-br from-[#00A7E1] to-[#0077B6] text-white relative overflow-hidden"
     >
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -90,7 +90,7 @@ export default function CallToAction() {
         )}
       </div>
 
-      <div className="container px-4 md:px-6 relative z-10">
+      <div className="container px-4 md:px-6 max-w-full md:max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -104,7 +104,7 @@ export default function CallToAction() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-bold tracking-tight mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4"
           >
             Vamos impulsionar seu negócio
           </motion.h2>
@@ -112,19 +112,19 @@ export default function CallToAction() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="max-w-2xl mx-auto text-white/90 text-lg md:text-xl"
+            className="max-w-2xl mx-auto text-white/90 text-base sm:text-lg md:text-xl"
           >
             Entre em contato para uma consultoria personalizada e descubra como podemos ajudar sua empresa a crescer com
             soluções contábeis inteligentes.
           </motion.p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 items-center">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16 items-center">
           <AnimateOnScroll variant="fade-right" duration={0.8}>
-            <div className="flex flex-col justify-center space-y-6 bg-white/10 backdrop-blur-sm p-6 md:p-8 rounded-2xl">
+            <div className="flex flex-col justify-center space-y-4 sm:space-y-6 bg-white/10 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-2xl">
               <div className="space-y-6">
-                <div className="flex items-center gap-4 group hover:translate-x-2 transition-transform duration-300">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                <div className="flex items-center gap-3 sm:gap-4 group hover:translate-x-2 transition-transform duration-300">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center">
                     <Phone className="h-5 w-5 text-white" />
                   </div>
                   <div>
@@ -133,18 +133,20 @@ export default function CallToAction() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 group hover:translate-x-2 transition-transform duration-300">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                <div className="flex items-center gap-3 sm:gap-4 group hover:translate-x-2 transition-transform duration-300">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center">
                     <Mail className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <p className="text-white/70 text-sm">Email</p>
-                    <span className="font-medium text-lg">contato@triarcontabilidade.com.br</span>
+                    <span className="font-medium text-lg break-all sm:break-normal">
+                      contato@triarcontabilidade.com.br
+                    </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 group hover:translate-x-2 transition-transform duration-300">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                <div className="flex items-center gap-3 sm:gap-4 group hover:translate-x-2 transition-transform duration-300">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center">
                     <MapPin className="h-5 w-5 text-white" />
                   </div>
                   <div>
@@ -171,7 +173,7 @@ export default function CallToAction() {
 
           <AnimateOnScroll variant="fade-left" duration={0.8}>
             <motion.div
-              className="bg-white/95 p-6 md:p-8 rounded-2xl shadow-xl"
+              className="bg-white/95 p-4 sm:p-6 md:p-8 rounded-2xl shadow-xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -195,7 +197,7 @@ export default function CallToAction() {
                 <form className="space-y-5" onSubmit={handleSubmit}>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">Envie uma mensagem</h3>
 
-                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-sm font-medium text-gray-700">
                         Nome
@@ -293,7 +295,7 @@ export default function CallToAction() {
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                     <Button
                       type="submit"
-                      className="w-full py-6 bg-[#00A7E1] hover:bg-[#0089b8] text-white relative overflow-hidden group"
+                      className="w-full py-4 sm:py-6 bg-[#00A7E1] hover:bg-[#0089b8] text-white relative overflow-hidden group"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (

@@ -25,7 +25,7 @@ const DynamicInteractiveSections = dynamic(() => import("@/components/interactiv
 export default function Home() {
   return (
 
-      <main className="min-h-screen w-full">
+      <main className="min-h-screen">
         <Header />
         <Hero />
         <Services />
