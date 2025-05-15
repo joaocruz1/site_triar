@@ -1,68 +1,67 @@
-/* Estilos específicos para a página de blog */
 .content h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: #111827;
-  }
-  
-  .content h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 1.75rem;
-    margin-bottom: 0.75rem;
-    color: #111827;
-  }
-  
-  .content p {
-    margin-bottom: 1.25rem;
-    line-height: 1.7;
-    color: #4b5563;
-  }
-  
-  .content a {
-    color: #00a7e1;
-    text-decoration: none;
-  }
-  
-  .content a:hover {
-    text-decoration: underline;
-  }
-  
-  .content ul,
-  .content ol {
-    margin-left: 1.5rem;
-    margin-bottom: 1.25rem;
-  }
-  
-  .content li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .content img {
-    max-width: 100%;
-    border-radius: 0.5rem;
-    margin: 1.5rem 0;
-  }
-  
-  .content blockquote {
-    border-left: 4px solid #00a7e1;
-    padding-left: 1rem;
-    margin-left: 0;
-    margin-right: 0;
-    font-style: italic;
-    color: #6b7280;
-  }
-  
-  /* Ajustes para mobile */
-  @media (max-width: 768px) {
-    .content h2 {
-      font-size: 1.5rem;
-    }
-  
-    .content h3 {
-      font-size: 1.25rem;
-    }
-  }
-  
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 2.5rem 0 1rem;
+  color: #111827;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  color: #111827;
+}
+
+.content p {
+  margin: 1.25rem 0;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #374151;
+}
+
+.content ul, .content ol {
+  margin: 1.25rem 0;
+  padding-left: 1.5rem;
+}
+
+.content li {
+  margin: 0.5rem 0;
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+.content a {
+  color: #00A7E1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.content a:hover {
+  color: #0077a8;
+}
+
+.content code {
+  background-color: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.content pre {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.content blockquote {
+  border-left: 4px solid #00A7E1;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #6b7280;
+  font-style: italic;
+}

@@ -35,7 +35,7 @@ interface BlogPostData {
   category: string
   tags: string[]
   commentCount: number
-  slug?: string // Adicionando slug opcional para os posts relacionados
+  slug?: string
 }
 
 interface BlogPosts {
@@ -51,20 +51,15 @@ export default function BlogPost({ slug }: BlogPostProps) {
 
   // Fetch post data based on slug
   useEffect(() => {
-    // Simulate API call to fetch post data
     const fetchPost = async () => {
       setLoading(true)
-
-      // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // Mock blog posts data
       const blogPosts: BlogPosts = {
         "planejamento-tributario-reducao-impostos": {
           id: 1,
           title: "Como o planejamento tributário pode reduzir a carga de impostos da sua empresa",
-          excerpt:
-            "Descubra estratégias legais para reduzir a carga tributária da sua empresa e aumentar a lucratividade do seu negócio.",
+          excerpt: "Descubra estratégias legais para reduzir a carga tributária da sua empresa e aumentar a lucratividade do seu negócio.",
           content: `
 ## O que é planejamento tributário?
 
@@ -131,8 +126,7 @@ Lembre-se: economizar em impostos não é apenas sobre pagar menos, mas sobre pa
         "mudancas-legislacao-contabil-2023": {
           id: 2,
           title: "As principais mudanças na legislação contábil para 2023",
-          excerpt:
-            "Fique por dentro das principais alterações na legislação contábil e fiscal que entram em vigor em 2023 e como elas afetam o seu negócio.",
+          excerpt: "Fique por dentro das principais alterações na legislação contábil e fiscal que entram em vigor em 2023 e como elas afetam o seu negócio.",
           content: `
 ## Introdução às mudanças legislativas de 2023
 
@@ -198,8 +192,7 @@ Manter-se em conformidade com a legislação é fundamental para evitar penalida
         "contabilidade-digital-transformacao-tecnologica": {
           id: 3,
           title: "Contabilidade digital: como a tecnologia está transformando o setor",
-          excerpt:
-            "Conheça as principais tendências tecnológicas que estão revolucionando a contabilidade e como elas podem beneficiar o seu negócio.",
+          excerpt: "Conheça as principais tendências tecnológicas que estão revolucionando a contabilidade e como elas podem beneficiar o seu negócio.",
           content: `
 ## A revolução digital na contabilidade
 
@@ -245,7 +238,7 @@ Apesar dos benefícios, a transformação digital na contabilidade também apres
 1. **Necessidade de capacitação**: Profissionais precisam desenvolver novas habilidades
 2. **Investimento em tecnologia**: Aquisição e implementação de novos sistemas
 3. **Segurança de dados**: Proteção contra vazamentos e ataques cibernéticos
-4. **Resistência à mudência**: Adaptação a novos processos e formas de trabalho
+4. **Resistência à mudança**: Adaptação a novos processos e formas de trabalho
 
 ## O futuro da contabilidade
 
@@ -279,8 +272,7 @@ Investir em tecnologia e capacitação é essencial para aproveitar ao máximo o
         "guia-simples-nacional-vantagens-desvantagens": {
           id: 4,
           title: "Guia completo sobre o Simples Nacional: vantagens e desvantagens",
-          excerpt:
-            "Entenda o que é o Simples Nacional, quem pode optar por esse regime tributário e quais são suas vantagens e desvantagens.",
+          excerpt: "Entenda o que é o Simples Nacional, quem pode optar por esse regime tributário e quais são suas vantagens e desvantagens.",
           content: `
 ## O que é o Simples Nacional?
 
@@ -478,28 +470,20 @@ Investir em organização, tecnologia e conhecimento é muito mais econômico do
         },
       }
 
-      // Check if the requested post exists
       const foundPost = blogPosts[slug]
       if (foundPost) {
         setPost(foundPost)
-
-        // Get related posts (same category or tags)
+        
         const related = Object.values(blogPosts)
-          .filter((p) => {
-            if (p.id === foundPost.id) return false // Skip current post
-            return (
-              p.category === foundPost.category ||
-              p.tags.some((tag: string) => foundPost.tags.includes(tag))
-            )
-          })
+          .filter((p) => p.id !== foundPost.id && 
+            (p.category === foundPost.category || 
+             p.tags.some(tag => foundPost.tags.includes(tag))))
           .slice(0, 3)
-
+        
         setRelatedPosts(related)
       } else {
-        // Post not found, redirect to 404
         router.push("/blog/not-found")
       }
-
       setLoading(false)
     }
 
@@ -575,9 +559,7 @@ Investir em organização, tecnologia e conhecimento é muito mais econômico do
     )
   }
 
-  if (!post) {
-    return null // This should not happen as we redirect to 404 if post not found
-  }
+  if (!post) return null
 
   return (
     <div className="container px-4 md:px-6 py-12 md:py-16 lg:py-24">
@@ -640,7 +622,13 @@ Investir em organização, tecnologia e conhecimento é muito mais econômico do
               </div>
 
               <div className="relative h-[300px] md:h-[400px] lg:h-[500px] w-full mb-8 rounded-xl overflow-hidden">
-                <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
+                <Image 
+                  src={post.image || "/placeholder.svg"} 
+                  alt={post.title} 
+                  fill 
+                  className="object-cover"
+                  priority
+                />
               </div>
 
               <div className="flex items-center justify-between mb-8 pb-4 border-b">
@@ -650,12 +638,22 @@ Investir em organização, tecnologia e conhecimento é muito mais econômico do
                 </div>
 
                 <div className="flex gap-2">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={sharePost}>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0 rounded-full" 
+                    onClick={sharePost}
+                  >
                     <Share2 className="h-4 w-4 text-gray-500 hover:text-[#00A7E1]" />
                     <span className="sr-only">Compartilhar</span>
                   </Button>
 
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={toggleSavePost}>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0 rounded-full" 
+                    onClick={toggleSavePost}
+                  >
                     {isSaved ? (
                       <BookmarkCheck className="h-4 w-4 text-[#00A7E1]" />
                     ) : (
@@ -666,7 +664,23 @@ Investir em organização, tecnologia e conhecimento é muito mais econômico do
                 </div>
               </div>
 
-              <div className={styles.content} dangerouslySetInnerHTML={{ __html: post.content }} />
+              <div 
+                className="prose prose-lg max-w-none 
+                  prose-headings:text-gray-900 prose-headings:font-semibold
+                  prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-2 prose-h2:mt-8
+                  prose-h3:mt-6 
+                  prose-p:text-gray-700 prose-p:text-lg 
+                  prose-li:text-gray-700 prose-li:text-lg
+                  prose-a:text-[#00A7E1] prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-[#0077a8]
+                  prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono
+                  prose-pre:bg-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto
+                  prose-blockquote:border-l-4 prose-blockquote:border-[#00A7E1] prose-blockquote:pl-4 prose-blockquote:text-gray-500 prose-blockquote:italic
+                  prose-table:w-full prose-table:border-collapse
+                  prose-th:bg-gray-50 prose-th:p-3 prose-th:border prose-th:border-gray-200
+                  prose-td:p-3 prose-td:border prose-td:border-gray-200
+                  prose-img:rounded-lg prose-img:my-6"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
 
               <div className="mt-12 pt-6 border-t">
                 <h3 className="text-xl font-bold mb-4">Tags</h3>
