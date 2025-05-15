@@ -449,7 +449,7 @@ export default function Chatbot() {
               aria-modal="true"
               aria-labelledby="chatbot-title"
             >
-              <Card className="border border-gray-200 bg-amber-50 shadow-2xl overflow-hidden rounded-2xl">
+              <Card className="border border-gray-200 shadow-2xl overflow-hidden rounded-2xl">
                 <CardHeader className="bg-gradient-to-r from-[#0056D2] to-[#00A7E1] text-white p-4 flex flex-row justify-between items-center">
                   <div className="flex items-center gap-3">
                     <div className="relative">
