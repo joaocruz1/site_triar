@@ -30,10 +30,25 @@ const fetchPostData = async (slug: string) => {
 
   // Simula busca de dados (em uma aplicação real, seria uma chamada API/DB)
   const post = {
-    title: "Como o planejamento tributário pode reduzir a carga de impostos da sua empresa",
+    title:
+      slug === "planejamento-tributario-reducao-impostos"
+        ? "Como o planejamento tributário pode reduzir a carga de impostos da sua empresa"
+        : slug === "mudancas-legislacao-contabil-2023"
+          ? "As principais mudanças na legislação contábil para 2023"
+          : slug === "contabilidade-digital-transformacao-tecnologica"
+            ? "Contabilidade digital: como a tecnologia está transformando o setor"
+            : slug === "guia-simples-nacional-vantagens-desvantagens"
+              ? "Guia completo sobre o Simples Nacional: vantagens e desvantagens"
+              : "Artigo sobre " + slug.replace(/-/g, " "),
     excerpt:
       "Descubra estratégias legais para reduzir a carga tributária da sua empresa e aumentar a lucratividade do seu negócio.",
-    category: "Tributário",
+    category: slug.includes("tributario")
+      ? "Tributário"
+      : slug.includes("legislacao")
+        ? "Legislação"
+        : slug.includes("digital")
+          ? "Tecnologia"
+          : "Contabilidade",
   }
 
   return post

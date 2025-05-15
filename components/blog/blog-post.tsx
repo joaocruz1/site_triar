@@ -1,1010 +1,727 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { Calendar, Clock, MessageSquare, Share2, Bookmark, BookmarkCheck, ChevronLeft, Tag } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import Header from "../layout/header"
-import Footer from "../layout/footer"
-import { motion, AnimatePresence } from "framer-motion"
-import {
-  Calendar,
-  Clock,
-  MessageSquare,
-  Bookmark,
-  BookmarkCheck,
-  ThumbsUp,
-  Facebook,
-  Twitter,
-  Linkedin,
-  Copy,
-  Check,
-  ArrowLeft,
-  ArrowRight,
-  Send,
-  Share2,
-  Eye,
-  Heart,
-  ChevronRight,
-} from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { motion } from "framer-motion"
+import AnimateOnScroll from "@/components/shared/animate-on-scroll"
+import BlogCategories from "@/components/blog/blog-categories"
+import BlogNewsletter from "@/components/blog/blog-newsletter"
+import styles from "@/app/blog/[slug]/page.module.css"
 
 interface BlogPostProps {
   slug: string
 }
 
+interface BlogPostData {
+  id: number
+  title: string
+  excerpt: string
+  content: string
+  image: string
+  date: string
+  readTime: string
+  author: {
+    name: string
+    role: string
+    image: string
+  }
+  category: string
+  tags: string[]
+  commentCount: number
+  slug?: string // Adicionando slug opcional para os posts relacionados
+}
+
+interface BlogPosts {
+  [key: string]: BlogPostData
+}
+
 export default function BlogPost({ slug }: BlogPostProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [post, setPost] = useState<any>(null)
+  const [post, setPost] = useState<BlogPostData | null>(null)
+  const [relatedPosts, setRelatedPosts] = useState<BlogPostData[]>([])
   const [isSaved, setIsSaved] = useState(false)
-  const [likeCount, setLikeCount] = useState(0)
-  const [hasLiked, setHasLiked] = useState(false)
-  const [commentText, setCommentText] = useState("")
-  const [comments, setComments] = useState<any[]>([])
-  const [activeTab, setActiveTab] = useState("conteudo")
-  const [copied, setCopied] = useState(false)
-  const [estimatedReadTime, setEstimatedReadTime] = useState("0 min")
-  const [relatedPosts, setRelatedPosts] = useState<any[]>([])
-  const [replyingTo, setReplyingTo] = useState<number | null>(null)
-  const [replyText, setReplyText] = useState("")
-  const contentRef = useRef<HTMLDivElement>(null)
-  const [isShareMenuOpen, setIsShareMenuOpen] = useState(false)
 
-  // Simular carregamento de dados
+  // Fetch post data based on slug
   useEffect(() => {
-    // Simular delay de carregamento
-    const timer = setTimeout(() => {
-      const postData = {
-        id: 1,
-        title: "Como o planejamento tributário pode reduzir a carga de impostos da sua empresa",
-        content: `
-          <h2>Introdução ao Planejamento Tributário</h2>
-          <p>O planejamento tributário é uma ferramenta essencial para empresas de todos os portes que buscam otimizar sua carga fiscal de forma legal. Diferente da sonegação fiscal, que é crime, o planejamento tributário utiliza mecanismos previstos em lei para reduzir o impacto dos impostos no fluxo de caixa da empresa.</p>
-          
-          <p>Segundo dados da Receita Federal, empresas brasileiras gastam em média 34% do seu faturamento com tributos. Com um planejamento tributário adequado, é possível reduzir essa carga em até 30%, dependendo do segmento e do regime tributário adotado.</p>
-          
-          <h2>Principais Estratégias de Planejamento Tributário</h2>
-          
-          <h3>1. Escolha do Regime Tributário Adequado</h3>
-          <p>A escolha entre Simples Nacional, Lucro Presumido ou Lucro Real deve ser feita com base em uma análise detalhada do faturamento, margem de lucro e setor de atuação da empresa. Cada regime possui suas particularidades e pode ser mais vantajoso dependendo do perfil do negócio.</p>
-          
-          <h3>2. Aproveitamento de Incentivos Fiscais</h3>
-          <p>Existem diversos incentivos fiscais disponíveis para empresas que investem em áreas como pesquisa e desenvolvimento, cultura, esporte e programas sociais. Identificar e utilizar esses incentivos pode gerar economia significativa.</p>
-          
-          <h3>3. Reorganização Societária</h3>
-          <p>Em alguns casos, a reorganização da estrutura societária pode trazer benefícios fiscais. Isso inclui cisões, fusões, incorporações ou criação de holdings, sempre respeitando a legislação vigente e o propósito negocial.</p>
-          
-          <h3>4. Gestão de Créditos Tributários</h3>
-          <p>Muitas empresas deixam de aproveitar créditos tributários a que têm direito. Uma gestão eficiente desses créditos, especialmente em tributos como PIS, COFINS e ICMS, pode representar economia significativa.</p>
-          
-          <h2>Casos de Sucesso</h2>
-          <p>Uma empresa do setor de tecnologia conseguiu reduzir sua carga tributária em 25% após migrar do Lucro Presumido para o Lucro Real e implementar um sistema eficiente de aproveitamento de créditos de PIS e COFINS sobre insumos.</p>
-          
-          <p>Já uma rede de varejo economizou aproximadamente R$ 500 mil anuais ao reorganizar sua estrutura societária e centralizar operações logísticas em um estado com benefícios fiscais para o setor.</p>
-          
-          <h2>Riscos e Cuidados</h2>
-          <p>É fundamental diferenciar planejamento tributário de evasão fiscal. Todas as estratégias adotadas devem estar em conformidade com a legislação vigente e serem devidamente documentadas. Contar com assessoria especializada é essencial para evitar problemas futuros com o fisco.</p>
-          
-          <h2>Conclusão</h2>
-          <p>O planejamento tributário é uma ferramenta estratégica que, quando bem executada, pode representar um diferencial competitivo para as empresas. Investir em consultoria especializada e manter-se atualizado sobre as mudanças na legislação são passos fundamentais para garantir uma gestão tributária eficiente e segura.</p>
-        `,
-        excerpt:
-          "Descubra estratégias legais para reduzir a carga tributária da sua empresa e aumentar a lucratividade do seu negócio.",
-        image: "https://images.pexels.com/photos/6863254/pexels-photo-6863254.jpeg?height=500&width=1000",
-        date: "15 de abril de 2023",
-        author: {
-          name: "Carlos Oliveira",
-          role: "Contador Sênior",
-          image: "/placeholder.svg?height=100&width=100",
-          bio: "Contador com mais de 15 anos de experiência em planejamento tributário e gestão fiscal para empresas de diversos segmentos.",
+    // Simulate API call to fetch post data
+    const fetchPost = async () => {
+      setLoading(true)
+
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      // Mock blog posts data
+      const blogPosts: BlogPosts = {
+        "planejamento-tributario-reducao-impostos": {
+          id: 1,
+          title: "Como o planejamento tributário pode reduzir a carga de impostos da sua empresa",
+          excerpt:
+            "Descubra estratégias legais para reduzir a carga tributária da sua empresa e aumentar a lucratividade do seu negócio.",
+          content: `
+## O que é planejamento tributário?
+
+O planejamento tributário é um conjunto de medidas legais que visam diminuir o pagamento de tributos. Trata-se de um direito garantido ao contribuinte, conforme já decidiu o Supremo Tribunal Federal.
+
+Diferente da sonegação fiscal, que é crime, o planejamento tributário utiliza meios legais para reduzir a carga tributária, aproveitando benefícios fiscais e incentivos previstos na legislação.
+
+## Por que o planejamento tributário é importante?
+
+No Brasil, a carga tributária é uma das mais altas do mundo, chegando a aproximadamente 33% do PIB. Para empresas, isso significa que uma parte significativa do faturamento é destinada ao pagamento de impostos.
+
+Com um planejamento tributário eficiente, é possível:
+
+- Reduzir legalmente o pagamento de impostos
+- Evitar autuações fiscais
+- Aumentar a lucratividade do negócio
+- Melhorar o fluxo de caixa
+- Tornar a empresa mais competitiva no mercado
+
+## Principais estratégias de planejamento tributário
+
+### 1. Escolha do regime tributário adequado
+
+A escolha entre Simples Nacional, Lucro Presumido ou Lucro Real pode gerar economia significativa. Cada regime tem suas particularidades e a opção mais vantajosa depende de diversos fatores como faturamento, margem de lucro e segmento de atuação.
+
+### 2. Aproveitamento de incentivos fiscais
+
+Existem diversos incentivos fiscais disponíveis, como os relacionados à inovação tecnológica (Lei do Bem), incentivos regionais (SUDENE, SUDAM), incentivos setoriais, entre outros.
+
+### 3. Reorganização societária
+
+Fusões, cisões, incorporações e outras formas de reorganização societária podem ser utilizadas para otimizar a carga tributária, desde que haja propósito negocial legítimo.
+
+### 4. Gestão de créditos tributários
+
+O aproveitamento adequado de créditos tributários, especialmente em relação a tributos não-cumulativos como PIS, COFINS e ICMS, pode representar economia significativa.
+
+## Como implementar um planejamento tributário eficiente
+
+1. **Análise da situação atual**: Avalie a atual estrutura tributária da empresa
+2. **Identificação de oportunidades**: Identifique possíveis economias fiscais
+3. **Elaboração de estratégias**: Desenvolva um plano de ação
+4. **Implementação**: Coloque as estratégias em prática
+5. **Monitoramento**: Acompanhe os resultados e faça ajustes quando necessário
+
+## Conclusão
+
+O planejamento tributário é uma ferramenta essencial para a saúde financeira das empresas. Com a orientação adequada de profissionais especializados, é possível reduzir significativamente a carga tributária de forma legal e segura, contribuindo para o crescimento e a competitividade do seu negócio.
+
+Lembre-se: economizar em impostos não é apenas sobre pagar menos, mas sobre pagar o justo, conforme previsto na legislação.
+          `,
+          image: "/placeholder.svg?height=600&width=1200",
+          date: "15 de abril de 2023",
+          readTime: "5 min de leitura",
+          author: {
+            name: "Carlos Oliveira",
+            role: "Contador Sênior",
+            image: "/placeholder.svg?height=100&width=100",
+          },
+          category: "Tributário",
+          tags: ["Impostos", "Planejamento", "Economia"],
+          commentCount: 8,
         },
-        category: "Tributário",
-        tags: ["Impostos", "Planejamento", "Economia", "Gestão Fiscal"],
-        commentCount: 8,
-        likeCount: 42,
-        viewCount: 1250,
-      }
-
-      // Calcular tempo de leitura
-      const wordCount = postData.content.split(/\s+/).length
-      const readingTime = Math.ceil(wordCount / 200) // 200 palavras por minuto
-      setEstimatedReadTime(`${readingTime} min de leitura`)
-
-      // Posts relacionados
-      const relatedPostsData = [
-        {
+        "mudancas-legislacao-contabil-2023": {
           id: 2,
           title: "As principais mudanças na legislação contábil para 2023",
           excerpt:
-            "Fique por dentro das principais alterações na legislação contábil e fiscal que entram em vigor em 2023.",
-          image: "/placeholder.svg?height=200&width=300",
+            "Fique por dentro das principais alterações na legislação contábil e fiscal que entram em vigor em 2023 e como elas afetam o seu negócio.",
+          content: `
+## Introdução às mudanças legislativas de 2023
+
+O ano de 2023 traz consigo diversas alterações importantes na legislação contábil e fiscal brasileira. Estas mudanças impactam diretamente a rotina das empresas e exigem adaptação rápida para garantir a conformidade com as novas regras.
+
+## Principais alterações na legislação contábil
+
+### 1. Novas regras para o eSocial
+
+O eSocial continua seu processo de implementação com novas funcionalidades e obrigatoriedades. Em 2023, o sistema passa a integrar mais eventos e se torna obrigatório para um número maior de empresas.
+
+### 2. Mudanças no SPED Contábil
+
+A Escrituração Contábil Digital (ECD) apresenta novos layouts e informações obrigatórias, exigindo atualização dos sistemas contábeis e maior detalhamento nas informações prestadas.
+
+### 3. Alterações nas regras de depreciação
+
+Novas diretrizes para cálculo e registro de depreciação de ativos, alinhando-se às normas internacionais de contabilidade (IFRS).
+
+### 4. Implementação da LGPD na contabilidade
+
+A Lei Geral de Proteção de Dados impacta diretamente os processos contábeis, exigindo maior cuidado no tratamento de dados pessoais de colaboradores, clientes e fornecedores.
+
+## Mudanças na legislação fiscal
+
+### 1. Alterações nas alíquotas de impostos
+
+Diversos tributos tiveram suas alíquotas revisadas, com destaque para mudanças no ICMS em vários estados e alterações nas contribuições previdenciárias.
+
+### 2. Novas regras para o Simples Nacional
+
+Atualização de limites, alíquotas e procedimentos para empresas optantes pelo Simples Nacional, impactando diretamente o planejamento tributário.
+
+### 3. Mudanças na tributação de operações internacionais
+
+Novas regras para tributação de importações e exportações, com foco no combate à evasão fiscal e alinhamento às diretrizes da OCDE.
+
+## Como se preparar para as mudanças
+
+1. **Mantenha-se informado**: Acompanhe regularmente as atualizações legislativas
+2. **Invista em capacitação**: Treine sua equipe para lidar com as novas exigências
+3. **Atualize seus sistemas**: Garanta que seu software contábil esteja preparado para as mudanças
+4. **Consulte especialistas**: Conte com o apoio de profissionais especializados para implementar as adaptações necessárias
+
+## Conclusão
+
+As mudanças na legislação contábil e fiscal para 2023 representam desafios significativos para as empresas brasileiras. No entanto, com planejamento adequado e suporte profissional, é possível não apenas se adequar às novas regras, mas também identificar oportunidades de otimização fiscal e contábil.
+
+Manter-se em conformidade com a legislação é fundamental para evitar penalidades e garantir a saúde financeira do seu negócio no longo prazo.
+          `,
+          image: "/placeholder.svg?height=600&width=1200",
           date: "28 de março de 2023",
-          slug: "mudancas-legislacao-contabil-2023",
+          readTime: "7 min de leitura",
+          author: {
+            name: "Ana Silva",
+            role: "Especialista em Legislação",
+            image: "/placeholder.svg?height=100&width=100",
+          },
+          category: "Legislação",
+          tags: ["Legislação", "Atualização", "Contabilidade"],
+          commentCount: 5,
         },
-        {
+        "contabilidade-digital-transformacao-tecnologica": {
+          id: 3,
+          title: "Contabilidade digital: como a tecnologia está transformando o setor",
+          excerpt:
+            "Conheça as principais tendências tecnológicas que estão revolucionando a contabilidade e como elas podem beneficiar o seu negócio.",
+          content: `
+## A revolução digital na contabilidade
+
+A contabilidade, uma das profissões mais antigas do mundo, está passando por uma transformação digital sem precedentes. As novas tecnologias estão mudando radicalmente a forma como os profissionais contábeis trabalham e como as empresas gerenciam suas finanças.
+
+## Principais tecnologias que estão transformando a contabilidade
+
+### 1. Computação em nuvem
+
+Os sistemas de contabilidade baseados em nuvem permitem acesso remoto aos dados financeiros, facilitando o trabalho à distância e a colaboração entre equipes. Além disso, oferecem maior segurança e redução de custos com infraestrutura de TI.
+
+### 2. Automação de processos
+
+Tarefas repetitivas como lançamentos contábeis, conciliação bancária e geração de relatórios estão sendo automatizadas, permitindo que os contadores foquem em atividades estratégicas e de maior valor agregado.
+
+### 3. Inteligência Artificial e Machine Learning
+
+Algoritmos avançados estão sendo utilizados para análise preditiva, detecção de fraudes e tomada de decisões baseadas em dados. A IA também está revolucionando a auditoria, permitindo a análise de 100% das transações, em vez de amostragens.
+
+### 4. Blockchain
+
+A tecnologia blockchain promete revolucionar a contabilidade ao oferecer registros imutáveis e transparentes, reduzindo a necessidade de reconciliações e aumentando a confiabilidade das informações financeiras.
+
+## Benefícios da contabilidade digital
+
+### Para contadores:
+- Redução de tarefas manuais e repetitivas
+- Mais tempo para análises estratégicas e consultoria
+- Possibilidade de atender mais clientes com a mesma estrutura
+- Melhoria na qualidade e precisão dos serviços
+
+### Para empresas:
+- Acesso em tempo real às informações financeiras
+- Redução de custos operacionais
+- Tomada de decisões mais ágil e baseada em dados
+- Maior conformidade com obrigações fiscais
+- Melhor gestão de fluxo de caixa
+
+## Desafios da transformação digital
+
+Apesar dos benefícios, a transformação digital na contabilidade também apresenta desafios:
+
+1. **Necessidade de capacitação**: Profissionais precisam desenvolver novas habilidades
+2. **Investimento em tecnologia**: Aquisição e implementação de novos sistemas
+3. **Segurança de dados**: Proteção contra vazamentos e ataques cibernéticos
+4. **Resistência à mudência**: Adaptação a novos processos e formas de trabalho
+
+## O futuro da contabilidade
+
+A contabilidade do futuro será cada vez mais estratégica e menos operacional. Os contadores atuarão como consultores de negócios, utilizando dados e análises avançadas para orientar decisões empresariais.
+
+Algumas tendências para os próximos anos incluem:
+
+- Contabilidade em tempo real
+- Integração total entre sistemas financeiros, fiscais e gerenciais
+- Uso de realidade aumentada para visualização de dados
+- Contabilidade preditiva baseada em IA
+
+## Conclusão
+
+A transformação digital na contabilidade não é apenas uma tendência passageira, mas uma revolução que está redefinindo o setor. Empresas e profissionais que abraçarem essas mudanças estarão melhor posicionados para prosperar no novo cenário econômico.
+
+Investir em tecnologia e capacitação é essencial para aproveitar ao máximo os benefícios da contabilidade digital e garantir a competitividade no mercado.
+          `,
+          image: "/placeholder.svg?height=600&width=1200",
+          date: "10 de março de 2023",
+          readTime: "6 min de leitura",
+          author: {
+            name: "Roberto Santos",
+            role: "Especialista em Tecnologia Contábil",
+            image: "/placeholder.svg?height=100&width=100",
+          },
+          category: "Tecnologia",
+          tags: ["Digital", "Inovação", "Tecnologia"],
+          commentCount: 12,
+        },
+        "guia-simples-nacional-vantagens-desvantagens": {
           id: 4,
           title: "Guia completo sobre o Simples Nacional: vantagens e desvantagens",
           excerpt:
             "Entenda o que é o Simples Nacional, quem pode optar por esse regime tributário e quais são suas vantagens e desvantagens.",
-          image: "/placeholder.svg?height=200&width=300",
+          content: `
+## O que é o Simples Nacional?
+
+O Simples Nacional é um regime tributário diferenciado, simplificado e favorecido, aplicável às Microempresas (ME) e Empresas de Pequeno Porte (EPP). Foi instituído pela Lei Complementar nº 123/2006 e representa uma forma simplificada e unificada de recolhimento de tributos, por meio da aplicação de percentuais favorecidos sobre a receita bruta.
+
+## Quem pode optar pelo Simples Nacional?
+
+Para ser optante do Simples Nacional, a empresa precisa:
+
+- Ser classificada como Microempresa (faturamento anual até R$ 360 mil) ou Empresa de Pequeno Porte (faturamento anual entre R$ 360 mil e R$ 4,8 milhões)
+- Não exercer atividades impedidas pela legislação
+- Não ter sócio que participe com mais de 10% do capital de outra empresa não optante, desde que o faturamento global ultrapasse R$ 4,8 milhões
+- Não ser filial ou representante de empresa estrangeira
+- Não ter débitos com o INSS ou com as Fazendas Públicas Federal, Estadual ou Municipal
+
+## Vantagens do Simples Nacional
+
+### 1. Simplificação tributária
+
+O principal benefício do Simples Nacional é a unificação de oito tributos (IRPJ, CSLL, PIS, COFINS, IPI, CPP, ICMS e ISS) em uma única guia de pagamento, o DAS (Documento de Arrecadação do Simples Nacional).
+
+### 2. Redução da carga tributária
+
+Para muitas empresas, especialmente as de menor porte, o Simples Nacional representa uma carga tributária menor em comparação com outros regimes.
+
+### 3. Simplificação contábil
+
+As empresas optantes têm obrigações contábeis simplificadas, embora ainda precisem manter escrituração contábil regular.
+
+### 4. Menos burocracia
+
+Redução significativa nas obrigações acessórias, com menos declarações e documentos a serem entregues aos órgãos fiscalizadores.
+
+### 5. Facilidade de regularização
+
+O Simples Nacional oferece condições especiais para parcelamento de dívidas tributárias.
+
+## Desvantagens do Simples Nacional
+
+### 1. Limitação de faturamento
+
+O limite de faturamento anual de R$ 4,8 milhões pode ser restritivo para empresas em crescimento.
+
+### 2. Restrições de atividades
+
+Diversas atividades não podem optar pelo Simples Nacional, como empresas que atuam no setor financeiro, consultorias e algumas categorias de serviços profissionais.
+
+### 3. Limitações de créditos tributários
+
+Empresas que fornecem para outras no Lucro Real não geram créditos de PIS e COFINS, o que pode torná-las menos competitivas em determinados mercados.
+
+### 4. Alíquotas progressivas
+
+À medida que o faturamento aumenta, as alíquotas também sobem, podendo tornar o regime menos vantajoso para empresas com maior receita.
+
+### 5. Restrições na participação societária
+
+Limitações quanto à participação em outras empresas podem restringir estratégias de expansão e diversificação.
+
+## Como calcular os impostos no Simples Nacional
+
+O cálculo do Simples Nacional é baseado na receita bruta acumulada nos 12 meses anteriores ao período de apuração. Com base nesse valor, aplica-se a alíquota correspondente à faixa de faturamento, conforme tabelas específicas para cada anexo.
+
+A fórmula básica é:
+\`\`\`
+Valor devido = (Receita Bruta × Alíquota) - Parcela a Deduzir
+\`\`\`
+
+## Conclusão
+
+O Simples Nacional pode ser extremamente vantajoso para muitas empresas, especialmente as de menor porte e com estruturas mais simples. No entanto, não é a melhor opção para todos os negócios.
+
+A decisão sobre o regime tributário deve ser baseada em uma análise detalhada da situação específica da empresa, considerando não apenas o aspecto tributário imediato, mas também os planos de crescimento e as estratégias de longo prazo.
+
+Recomenda-se sempre consultar um contador especializado para avaliar qual o regime mais vantajoso para o seu negócio, considerando todas as particularidades e projeções futuras.
+          `,
+          image: "/placeholder.svg?height=600&width=1200",
           date: "22 de fevereiro de 2023",
-          slug: "guia-simples-nacional-vantagens-desvantagens",
+          readTime: "8 min de leitura",
+          author: {
+            name: "Juliana Costa",
+            role: "Consultora Tributária",
+            image: "/placeholder.svg?height=100&width=100",
+          },
+          category: "Tributário",
+          tags: ["Simples Nacional", "Tributação", "MEI"],
+          commentCount: 15,
         },
-        {
-          id: 6,
-          title: "O impacto da reforma tributária para pequenas e médias empresas",
-          excerpt: "Análise detalhada de como a reforma tributária afetará o dia a dia das PMEs brasileiras.",
-          image: "/placeholder.svg?height=200&width=300",
-          date: "18 de janeiro de 2023",
-          slug: "impacto-reforma-tributaria-pmes",
-        },
-      ]
+        "preparacao-auditoria-fiscal": {
+          id: 5,
+          title: "Como preparar sua empresa para uma auditoria fiscal",
+          excerpt: "Dicas práticas para preparar sua empresa para uma auditoria fiscal e evitar problemas com o Fisco.",
+          content: `
+## A importância de estar preparado para auditorias fiscais
 
-      // Comentários
-      const commentsData = [
-        {
-          id: 1,
-          author: "Mariana Silva",
-          image: "/placeholder.svg?height=50&width=50",
-          date: "16 de abril de 2023",
-          content:
-            "Excelente artigo! Implementamos algumas dessas estratégias na nossa empresa e conseguimos uma redução significativa na carga tributária.",
-          likes: 5,
-        },
-        {
-          id: 2,
-          author: "Roberto Almeida",
-          image: "/placeholder.svg?height=50&width=50",
-          date: "17 de abril de 2023",
-          content:
-            "Gostaria de saber se essas estratégias se aplicam também para MEIs que estão pensando em migrar para ME.",
-          likes: 2,
-          replies: [
-            {
-              id: 3,
-              author: "Carlos Oliveira",
-              image: "/placeholder.svg?height=50&width=50",
-              date: "17 de abril de 2023",
-              content:
-                "Olá Roberto! Sim, algumas estratégias podem ser adaptadas para MEIs em transição. Recomendo especialmente a análise cuidadosa do regime tributário mais vantajoso após a mudança.",
-              likes: 3,
-            },
-          ],
-        },
-      ]
+Auditorias fiscais são procedimentos realizados pelas autoridades tributárias para verificar o cumprimento das obrigações fiscais pelas empresas. Estar preparado para esses eventos é fundamental para evitar multas, juros e até mesmo processos administrativos ou judiciais.
 
-      setPost(postData)
-      setLikeCount(postData.likeCount)
-      setRelatedPosts(relatedPostsData)
-      setComments(commentsData)
+## Sinais de que sua empresa pode ser alvo de uma auditoria fiscal
+
+Alguns fatores aumentam as chances de uma empresa ser selecionada para auditoria:
+
+- Inconsistências nas declarações fiscais
+- Variações significativas de faturamento entre períodos
+- Alto volume de operações com empresas do Simples Nacional
+- Margens de lucro muito diferentes da média do setor
+- Denúncias de irregularidades
+- Histórico de infrações fiscais
+
+## Como se preparar para uma auditoria fiscal
+
+### 1. Mantenha a documentação organizada
+
+Todos os documentos fiscais, contábeis e societários devem estar organizados e facilmente acessíveis. Isso inclui:
+
+- Notas fiscais de entrada e saída
+- Comprovantes de pagamento de tributos
+- Livros fiscais e contábeis
+- Contratos com clientes e fornecedores
+- Documentos societários (contrato social, alterações, atas)
+- Documentos trabalhistas e previdenciários
+
+### 2. Realize auditorias internas periódicas
+
+Auditorias internas preventivas ajudam a identificar e corrigir problemas antes que eles sejam detectados pelo Fisco. Considere:
+
+- Revisão de procedimentos fiscais
+- Verificação de cálculos de impostos
+- Análise de créditos tributários
+- Conferência de obrigações acessórias
+
+### 3. Mantenha-se atualizado sobre a legislação
+
+A legislação tributária muda constantemente. É essencial:
+
+- Acompanhar as alterações legislativas
+- Participar de cursos e treinamentos
+- Contar com assessoria jurídica e contábil especializada
+- Assinar informativos e publicações do setor
+
+### 4. Invista em tecnologia
+
+Sistemas de gestão fiscal e contábil ajudam a:
+
+- Automatizar cálculos de impostos
+- Gerar relatórios precisos
+- Manter registros detalhados
+- Reduzir erros humanos
+- Facilitar o cumprimento de obrigações acessórias
+
+### 5. Prepare sua equipe
+
+Todos os colaboradores envolvidos em processos fiscais devem:
+
+- Conhecer os procedimentos corretos
+- Saber como agir durante uma fiscalização
+- Entender a importância da conformidade fiscal
+- Estar preparados para responder questionamentos
+
+## Durante a auditoria fiscal
+
+Se sua empresa for selecionada para uma auditoria, siga estas orientações:
+
+1. **Mantenha a calma**: Auditorias são procedimentos normais e não significam necessariamente que há irregularidades
+2. **Seja cooperativo**: Facilite o trabalho dos auditores, fornecendo os documentos solicitados
+3. **Seja preciso**: Responda apenas o que foi perguntado, de forma clara e objetiva
+4. **Documente tudo**: Mantenha registro de todos os documentos entregues e solicitações feitas
+5. **Conte com profissionais**: Tenha contadores e advogados presentes durante o processo
+
+## Após a auditoria
+
+Independentemente do resultado:
+
+1. **Analise os apontamentos**: Entenda os problemas identificados
+2. **Implemente melhorias**: Corrija processos para evitar reincidências
+3. **Considere regularizações**: Avalie programas de regularização fiscal se necessário
+4. **Documente as ações corretivas**: Mantenha registro das medidas tomadas
+
+## Conclusão
+
+Estar preparado para auditorias fiscais não é apenas uma questão de conformidade, mas também uma estratégia de gestão de riscos. Empresas que mantêm suas obrigações fiscais em dia e possuem processos bem estruturados enfrentam esses procedimentos com tranquilidade e minimizam os riscos de penalidades.
+
+Investir em organização, tecnologia e conhecimento é muito mais econômico do que arcar com multas, juros e processos decorrentes de irregularidades fiscais.
+          `,
+          image: "/placeholder.svg?height=600&width=1200",
+          date: "5 de fevereiro de 2023",
+          readTime: "6 min de leitura",
+          author: {
+            name: "Carlos Oliveira",
+            role: "Contador Sênior",
+            image: "/placeholder.svg?height=100&width=100",
+          },
+          category: "Fiscal",
+          tags: ["Auditoria", "Fiscal", "Compliance"],
+          commentCount: 3,
+        },
+      }
+
+      // Check if the requested post exists
+      const foundPost = blogPosts[slug]
+      if (foundPost) {
+        setPost(foundPost)
+
+        // Get related posts (same category or tags)
+        const related = Object.values(blogPosts)
+          .filter((p) => {
+            if (p.id === foundPost.id) return false // Skip current post
+            return (
+              p.category === foundPost.category ||
+              p.tags.some((tag: string) => foundPost.tags.includes(tag))
+            )
+          })
+          .slice(0, 3)
+
+        setRelatedPosts(related)
+      } else {
+        // Post not found, redirect to 404
+        router.push("/blog/not-found")
+      }
+
       setLoading(false)
-    }, 1500)
+    }
 
-    return () => clearTimeout(timer)
-  }, [slug])
+    fetchPost()
+  }, [slug, router])
 
-  // Verificar se o post está salvo
+  // Check saved status when post is loaded
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem("savedPosts") || "[]")
-    if (post && savedPosts.includes(post.id)) {
-      setIsSaved(true)
+    if (post) {
+      const savedPosts = localStorage.getItem("savedPosts")
+      if (savedPosts) {
+        const savedPostsArray = JSON.parse(savedPosts)
+        setIsSaved(savedPostsArray.includes(post.id))
+      }
     }
   }, [post])
 
-  // Funções de interação
+  // Toggle save post
   const toggleSavePost = () => {
     if (!post) return
 
-    const savedPosts = JSON.parse(localStorage.getItem("savedPosts") || "[]")
-    let newSavedPosts
+    const savedPosts = localStorage.getItem("savedPosts")
+    let savedPostsArray = savedPosts ? JSON.parse(savedPosts) : []
 
     if (isSaved) {
-      newSavedPosts = savedPosts.filter((id: number) => id !== post.id)
+      savedPostsArray = savedPostsArray.filter((id: number) => id !== post.id)
     } else {
-      newSavedPosts = [...savedPosts, post.id]
+      savedPostsArray.push(post.id)
     }
 
-    localStorage.setItem("savedPosts", JSON.stringify(newSavedPosts))
+    localStorage.setItem("savedPosts", JSON.stringify(savedPostsArray))
     setIsSaved(!isSaved)
   }
 
-  const handleLike = () => {
-    if (hasLiked) {
-      setLikeCount(likeCount - 1)
-    } else {
-      setLikeCount(likeCount + 1)
-    }
-    setHasLiked(!hasLiked)
-  }
-
-  const handleComment = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!commentText.trim()) return
-
-    const newComment = {
-      id: Date.now(),
-      author: "Você",
-      image: "/placeholder.svg?height=50&width=50",
-      date: new Date().toLocaleDateString("pt-BR"),
-      content: commentText,
-      likes: 0,
-    }
-
-    setComments([...comments, newComment])
-    setCommentText("")
-  }
-
-  const handleReply = (commentId: number) => {
-    if (!replyText.trim()) return
-
-    const updatedComments = comments.map((comment) => {
-      if (comment.id === commentId) {
-        return {
-          ...comment,
-          replies: [
-            ...(comment.replies || []),
-            {
-              id: Date.now(),
-              author: "Você",
-              image: "/placeholder.svg?height=50&width=50",
-              date: new Date().toLocaleDateString("pt-BR"),
-              content: replyText,
-              likes: 0,
-            },
-          ],
-        }
-      }
-      return comment
-    })
-
-    setComments(updatedComments)
-    setReplyText("")
-    setReplyingTo(null)
-  }
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const shareOnSocial = (platform: string) => {
+  // Share post
+  const sharePost = () => {
     if (!post) return
 
-    const url = encodeURIComponent(window.location.href)
-    const title = encodeURIComponent(post.title)
-
-    let shareUrl = ""
-
-    switch (platform) {
-      case "facebook":
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`
-        break
-      case "twitter":
-        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`
-        break
-      case "linkedin":
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
-        break
-      case "email":
-        shareUrl = `mailto:?subject=${title}&body=${url}`
-        break
-    }
-
-    if (shareUrl) {
-      window.open(shareUrl, "_blank")
+    if (navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: post.excerpt,
+        url: window.location.href,
+      })
+    } else {
+      // Fallback for browsers that don't support the Web Share API
+      navigator.clipboard.writeText(window.location.href)
+      alert("Link copiado para a área de transferência!")
     }
   }
 
-  // Rolar para cima quando a página carregar
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
-
-  // Progresso de leitura
-  const [readingProgress, setReadingProgress] = useState(0)
-
-  useEffect(() => {
-    const updateReadingProgress = () => {
-      if (!contentRef.current) return
-
-      const contentElement = contentRef.current
-      const totalHeight = contentElement.scrollHeight - contentElement.clientHeight
-      const windowScrollTop = window.scrollY - contentElement.offsetTop
-
-      if (windowScrollTop > 0) {
-        const scrolled = Math.min(100, Math.max(0, (windowScrollTop / totalHeight) * 100))
-        setReadingProgress(scrolled)
-      } else {
-        setReadingProgress(0)
-      }
-    }
-
-    window.addEventListener("scroll", updateReadingProgress)
-    return () => window.removeEventListener("scroll", updateReadingProgress)
-  }, [])
-
-  // Loading state
   if (loading) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="flex items-center gap-2 mb-6 text-sm text-gray-500">
-          <Skeleton className="h-5 w-20" />
-          <Skeleton className="h-5 w-5 rounded-full" />
-          <Skeleton className="h-5 w-24" />
-        </div>
-        <Skeleton className="h-12 w-3/4 mb-4" />
-        <div className="flex items-center gap-4 mb-6">
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-8 w-8 rounded-full" />
-            <Skeleton className="h-5 w-24" />
-          </div>
-          <Skeleton className="h-5 w-24" />
-          <Skeleton className="h-5 w-24" />
-        </div>
-        <Skeleton className="h-[400px] w-full mb-8 rounded-2xl" />
-        <div className="space-y-4">
+      <div className="container px-4 md:px-6 py-12 md:py-16 lg:py-24">
+        <div className="max-w-4xl mx-auto">
           <Skeleton className="h-8 w-48 mb-4" />
-          <Skeleton className="h-5 w-full" />
-          <Skeleton className="h-5 w-full" />
-          <Skeleton className="h-5 w-3/4" />
-          <Skeleton className="h-8 w-48 mt-8 mb-4" />
-          <Skeleton className="h-5 w-full" />
-          <Skeleton className="h-5 w-full" />
-          <Skeleton className="h-5 w-3/4" />
+          <Skeleton className="h-12 w-full mb-6" />
+          <div className="flex items-center gap-4 mb-8">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <div>
+              <Skeleton className="h-4 w-32 mb-2" />
+              <Skeleton className="h-3 w-24" />
+            </div>
+          </div>
+          <Skeleton className="h-[400px] w-full mb-8 rounded-xl" />
+          <div className="space-y-4">
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-3/4" />
+          </div>
         </div>
       </div>
     )
   }
 
   if (!post) {
-    return (
-      <>
-        <Header />
-        <div className="max-w-5xl mx-auto px-4 py-16 text-center">
-          <h2 className="text-3xl font-bold mb-4">Artigo não encontrado</h2>
-          <p className="text-gray-500 mb-8 max-w-md mx-auto">
-            O artigo que você está procurando não existe ou foi removido.
-          </p>
-          <Button asChild size="lg" className="bg-[#00A7E1] hover:bg-[#0089b8]">
-            <Link href="/blog">Voltar para o Blog</Link>
-          </Button>
-        </div>
-        <Footer />
-      </>
-    )
+    return null // This should not happen as we redirect to 404 if post not found
   }
 
   return (
-    <>
-      {/* Barra de progresso de leitura fixa no topo */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gray-100 z-50">
-        <motion.div
-          className="h-full bg-[#00A7E1]"
-          initial={{ width: "0%" }}
-          animate={{ width: `${readingProgress}%` }}
-          transition={{ duration: 0.1 }}
-        ></motion.div>
-      </div>
-
-      {/* Botões flutuantes de compartilhamento */}
-      <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
-        <div className="flex flex-col gap-3">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
+    <div className="container px-4 md:px-6 py-12 md:py-16 lg:py-24">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="lg:col-span-2">
+          <AnimateOnScroll variant="fade-up" duration={0.8}>
             <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full h-10 w-10 bg-white shadow-md hover:bg-[#00A7E1] hover:text-white transition-all"
-              onClick={() => shareOnSocial("facebook")}
+              variant="ghost"
+              size="sm"
+              className="mb-6 hover:bg-[#00A7E1]/10 hover:text-[#00A7E1]"
+              onClick={() => router.push("/blog")}
             >
-              <Facebook className="h-4 w-4" />
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Voltar para o blog
             </Button>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full h-10 w-10 bg-white shadow-md hover:bg-[#00A7E1] hover:text-white transition-all"
-              onClick={() => shareOnSocial("twitter")}
-            >
-              <Twitter className="h-4 w-4" />
-            </Button>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full h-10 w-10 bg-white shadow-md hover:bg-[#00A7E1] hover:text-white transition-all"
-              onClick={() => shareOnSocial("linkedin")}
-            >
-              <Linkedin className="h-4 w-4" />
-            </Button>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 }}>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full h-10 w-10 bg-white shadow-md hover:bg-[#00A7E1] hover:text-white transition-all"
-              onClick={copyToClipboard}
-            >
-              {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-            </Button>
-          </motion.div>
-        </div>
-      </div>
 
-      {/* Botão flutuante de compartilhamento mobile */}
-      <div className="fixed right-4 bottom-4 z-40 lg:hidden">
-        <div className="relative">
-          <Button
-            size="icon"
-            className="rounded-full h-12 w-12 bg-[#00A7E1] text-white shadow-lg hover:bg-[#0089b8]"
-            onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
-          >
-            <Share2 className="h-5 w-5" />
-          </Button>
-
-          <AnimatePresence>
-            {isShareMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 0 }}
-                animate={{ opacity: 1, scale: 1, y: -10 }}
-                exit={{ opacity: 0, scale: 0.8, y: 0 }}
-                className="absolute bottom-full right-0 mb-2 flex flex-col gap-2 items-end"
-              >
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full h-10 w-10 bg-white shadow-md"
-                    onClick={() => {
-                      shareOnSocial("facebook")
-                      setIsShareMenuOpen(false)
-                    }}
-                  >
-                    <Facebook className="h-4 w-4 text-blue-600" />
-                  </Button>
-                </motion.div>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full h-10 w-10 bg-white shadow-md"
-                    onClick={() => {
-                      shareOnSocial("twitter")
-                      setIsShareMenuOpen(false)
-                    }}
-                  >
-                    <Twitter className="h-4 w-4 text-sky-500" />
-                  </Button>
-                </motion.div>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full h-10 w-10 bg-white shadow-md"
-                    onClick={() => {
-                      shareOnSocial("linkedin")
-                      setIsShareMenuOpen(false)
-                    }}
-                  >
-                    <Linkedin className="h-4 w-4 text-blue-700" />
-                  </Button>
-                </motion.div>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full h-10 w-10 bg-white shadow-md"
-                    onClick={() => {
-                      copyToClipboard()
-                      setIsShareMenuOpen(false)
-                    }}
-                  >
-                    {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                  </Button>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-
-      <div className="bg-gradient-to-b from-gray-50 to-white pt-8 pb-4">
-        <div className="max-w-5xl mx-auto px-4">
-          {/* Breadcrumbs e categorias */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 text-sm">
-            <div className="flex items-center gap-2 text-gray-500">
-              <Link href="/blog" className="hover:text-[#00A7E1] transition-colors">
-                Blog
-              </Link>
-              <ChevronRight className="h-4 w-4" />
-              <Link
-                href={`/blog/categoria/${post.category.toLowerCase()}`}
-                className="hover:text-[#00A7E1] transition-colors"
-              >
-                {post.category}
-              </Link>
-            </div>
-            <Badge className="bg-[#00A7E1] hover:bg-[#0089b8] text-white">{post.category}</Badge>
-          </div>
-
-          {/* Título */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700"
-          >
-            {post.title}
-          </motion.h1>
-
-          {/* Metadados do post */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-wrap items-center gap-6 mb-8 text-sm"
-          >
-            <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
-                <AvatarImage src={post.author.image || "/placeholder.svg"} alt={post.author.name} />
-                <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <Link
-                  href={`/blog/autor/${post.author.name.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="font-medium hover:text-[#00A7E1] transition-colors block"
-                >
-                  {post.author.name}
-                </Link>
-                <span className="text-gray-500 text-xs">{post.author.role}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2 text-gray-500">
-                <Calendar className="h-4 w-4" />
-                <span>{post.date}</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-500">
-                <Clock className="h-4 w-4" />
-                <span>{estimatedReadTime}</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-500">
-                <Eye className="h-4 w-4" />
-                <span>{post.viewCount} visualizações</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Imagem de destaque */}
-      <div className="w-full bg-gray-100 py-8">
-        <div className="max-w-5xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="relative h-[300px] sm:h-[400px] md:h-[500px] w-full rounded-2xl overflow-hidden shadow-xl"
-          >
-            <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" priority />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-
-            {/* Tags flutuantes na imagem */}
-            <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
-              {post.tags.slice(0, 3).map((tag: string, index: number) => (
-                <Link key={index} href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}>
-                  <Badge className="bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white border-none">
-                    #{tag}
-                  </Badge>
-                </Link>
-              ))}
-            </div>
-
-            {/* Estatísticas flutuantes */}
-            <div className="absolute bottom-4 right-4 flex items-center gap-3">
-              <div className="flex items-center gap-1 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full">
-                <Heart className={`h-4 w-4 ${hasLiked ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
-                <span className="text-sm font-medium text-gray-800">{likeCount}</span>
-              </div>
-              <div className="flex items-center gap-1 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full">
-                <MessageSquare className="h-4 w-4 text-gray-600" />
-                <span className="text-sm font-medium text-gray-800">{comments.length}</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Conteúdo do artigo e abas */}
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-2/3">
-            <Tabs defaultValue="conteudo" value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-8 w-full justify-start bg-transparent border-b p-0 gap-8 h-auto">
-                <TabsTrigger
-                  value="conteudo"
-                  className={`border-b-2 rounded-none px-1 pb-2 text-base ${
-                    activeTab === "conteudo"
-                      ? "border-[#00A7E1] text-[#00A7E1]"
-                      : "border-transparent hover:border-gray-300 text-gray-500"
-                  }`}
-                >
-                  Artigo
-                </TabsTrigger>
-                <TabsTrigger
-                  value="comentarios"
-                  className={`border-b-2 rounded-none px-1 pb-2 text-base ${
-                    activeTab === "comentarios"
-                      ? "border-[#00A7E1] text-[#00A7E1]"
-                      : "border-transparent hover:border-gray-300 text-gray-500"
-                  }`}
-                >
-                  Comentários ({comments.length})
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="conteudo" className="mt-0">
-                {/* Conteúdo do artigo */}
-                <article
-                  ref={contentRef}
-                  className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-a:text-[#00A7E1] prose-a:no-underline hover:prose-a:underline mb-10 prose-img:rounded-xl prose-img:shadow-md"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
-
-                {/* Tags */}
-                <div className="mt-12 mb-8">
-                  <h4 className="text-lg font-bold mb-3">Tags</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.map((tag: string, index: number) => (
-                      <Link key={index} href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}>
-                        <Badge variant="outline" className="hover:bg-gray-100 transition-colors">
-                          #{tag}
-                        </Badge>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Autor */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 my-10 flex flex-col md:flex-row gap-6 items-center md:items-start shadow-sm border border-gray-100"
-                >
-                  <Avatar className="h-20 w-20 border-4 border-white shadow-md">
-                    <AvatarImage
-                      src={post.author.image || "/placeholder.svg"}
-                      alt={post.author.name}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="text-xl">{post.author.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h4 className="text-xl font-bold">{post.author.name}</h4>
-                    <p className="text-[#00A7E1] font-medium">{post.author.role}</p>
-                    <p className="text-gray-600 mt-3 mb-4">{post.author.bio}</p>
-                    <Link
-                      href={`/blog/autor/${post.author.name.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="inline-flex items-center gap-2 text-[#00A7E1] font-medium hover:underline"
-                    >
-                      Ver todos os artigos
-                      <ArrowRight className="h-4 w-4" />
+            <article>
+              <div className="mb-6">
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <Link href={`/blog/categoria/${post.category.toLowerCase()}`}>
+                    <Badge className="bg-[#00A7E1]/10 text-[#00A7E1] hover:bg-[#00A7E1]/20 border-none">
+                      {post.category}
+                    </Badge>
+                  </Link>
+                  {post.tags.map((tag: string) => (
+                    <Link key={tag} href={`/blog/tag/${tag.toLowerCase()}`}>
+                      <Badge variant="outline" className="hover:bg-gray-100">
+                        {tag}
+                      </Badge>
                     </Link>
-                  </div>
-                </motion.div>
-
-                {/* Navegação entre posts */}
-                <div className="border-t border-b py-6 my-10">
-                  <div className="flex flex-col sm:flex-row justify-between gap-4">
-                    <Button variant="outline" asChild className="flex gap-2 items-center group">
-                      <Link href={`/blog/${relatedPosts[0]?.slug || ""}`}>
-                        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                        <span className="truncate">Post anterior</span>
-                      </Link>
-                    </Button>
-                    <Button variant="outline" asChild className="flex gap-2 items-center group">
-                      <Link href={`/blog/${relatedPosts[1]?.slug || ""}`}>
-                        <span className="truncate">Próximo post</span>
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </Button>
-                  </div>
+                  ))}
                 </div>
 
-                {/* Posts relacionados */}
-                <div className="my-12">
-                  <h3 className="text-2xl font-bold mb-8">Posts Relacionados</h3>
-                  <div className="grid md:grid-cols-3 gap-6">
-                    {relatedPosts.map((relatedPost, index) => (
-                      <motion.div
-                        key={index}
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100"
-                      >
-                        <Link href={`/blog/${relatedPost.slug}`} className="block">
-                          <div className="relative h-48 w-full">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">{post.title}</h1>
+                <p className="text-lg text-gray-600 mb-6">{post.excerpt}</p>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarImage src={post.author.image || "/placeholder.svg"} alt={post.author.name} />
+                      <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium">{post.author.name}</div>
+                      <div className="text-sm text-gray-500">{post.author.role}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-4 w-4" />
+                      <span>{post.date}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      <span>{post.readTime}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative h-[300px] md:h-[400px] lg:h-[500px] w-full mb-8 rounded-xl overflow-hidden">
+                <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
+              </div>
+
+              <div className="flex items-center justify-between mb-8 pb-4 border-b">
+                <div className="flex items-center gap-1">
+                  <MessageSquare className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm text-gray-500">{post.commentCount} comentários</span>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={sharePost}>
+                    <Share2 className="h-4 w-4 text-gray-500 hover:text-[#00A7E1]" />
+                    <span className="sr-only">Compartilhar</span>
+                  </Button>
+
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={toggleSavePost}>
+                    {isSaved ? (
+                      <BookmarkCheck className="h-4 w-4 text-[#00A7E1]" />
+                    ) : (
+                      <Bookmark className="h-4 w-4 text-gray-500 hover:text-[#00A7E1]" />
+                    )}
+                    <span className="sr-only">{isSaved ? "Salvo" : "Salvar"}</span>
+                  </Button>
+                </div>
+              </div>
+
+              <div className={styles.content} dangerouslySetInnerHTML={{ __html: post.content }} />
+
+              <div className="mt-12 pt-6 border-t">
+                <h3 className="text-xl font-bold mb-4">Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag: string) => (
+                    <Link key={tag} href={`/blog/tag/${tag.toLowerCase()}`}>
+                      <div className="flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-[#00A7E1]/10 hover:text-[#00A7E1] transition-colors">
+                        <Tag className="h-3 w-3" />
+                        {tag}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {relatedPosts.length > 0 && (
+                <div className="mt-12 pt-6 border-t">
+                  <h3 className="text-xl font-bold mb-6">Artigos Relacionados</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {relatedPosts.map((relatedPost) => (
+                      <Link key={relatedPost.id} href={`/blog/${relatedPost.slug || relatedPost.id}`}>
+                        <motion.div
+                          className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
+                          whileHover={{ y: -5 }}
+                        >
+                          <div className="relative h-40 w-full">
                             <Image
                               src={relatedPost.image || "/placeholder.svg"}
                               alt={relatedPost.title}
                               fill
                               className="object-cover"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                           </div>
-                          <div className="p-5">
-                            <p className="text-[#00A7E1] text-sm mb-2">{relatedPost.date}</p>
-                            <h4 className="font-bold text-lg mb-2 line-clamp-2 hover:text-[#00A7E1] transition-colors">
-                              {relatedPost.title}
-                            </h4>
-                            <p className="text-gray-600 text-sm line-clamp-2">{relatedPost.excerpt}</p>
-                          </div>
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="comentarios" className="mt-0">
-                <div className="my-6">
-                  <h3 className="text-2xl font-bold mb-6">Comentários</h3>
-
-                  {/* Formulário de comentário */}
-                  <form
-                    onSubmit={handleComment}
-                    className="bg-gray-50 p-6 rounded-xl mb-8 shadow-sm border border-gray-100"
-                  >
-                    <h4 className="text-lg font-bold mb-4">Deixe seu comentário</h4>
-                    <div className="mb-4">
-                      <Textarea
-                        placeholder="Escreva seu comentário..."
-                        rows={4}
-                        value={commentText}
-                        onChange={(e) => setCommentText(e.target.value)}
-                        className="min-h-[120px] resize-y focus:ring-[#00A7E1] focus:border-[#00A7E1]"
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="bg-[#00A7E1] hover:bg-[#0089b8] flex items-center gap-2"
-                      disabled={!commentText.trim()}
-                    >
-                      <Send className="h-4 w-4" />
-                      Enviar Comentário
-                    </Button>
-                  </form>
-
-                  {/* Lista de comentários */}
-                  <div className="space-y-6">
-                    {comments.length > 0 ? (
-                      comments.map((comment) => (
-                        <motion.div
-                          key={comment.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5 }}
-                          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
-                        >
-                          <div className="flex items-start gap-3">
-                            <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
-                              <AvatarImage src={comment.image || "/placeholder.svg"} alt={comment.author} />
-                              <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1">
-                              <div className="flex justify-between flex-wrap gap-2">
-                                <div>
-                                  <h5 className="font-bold">{comment.author}</h5>
-                                  <p className="text-gray-500 text-sm">{comment.date}</p>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 w-8 p-0 rounded-full"
-                                    onClick={() => {
-                                      // Lógica para curtir comentário aqui
-                                    }}
-                                  >
-                                    <ThumbsUp className="h-4 w-4 text-gray-500 hover:text-[#00A7E1]" />
-                                  </Button>
-                                  <span className="text-sm text-gray-500">{comment.likes}</span>
-                                </div>
-                              </div>
-                              <p className="my-3">{comment.content}</p>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="text-sm text-gray-500 hover:text-[#00A7E1] p-0 h-auto"
-                                onClick={() => setReplyingTo(comment.id)}
-                              >
-                                Responder
-                              </Button>
-
-                              {/* Área de resposta */}
-                              {replyingTo === comment.id && (
-                                <div className="mt-4 pl-4 border-l-2 border-gray-200">
-                                  <Input
-                                    placeholder="Escreva sua resposta..."
-                                    value={replyText}
-                                    onChange={(e) => setReplyText(e.target.value)}
-                                    className="mb-2 focus:ring-[#00A7E1] focus:border-[#00A7E1]"
-                                  />
-                                  <div className="flex gap-2">
-                                    <Button
-                                      variant="default"
-                                      size="sm"
-                                      className="bg-[#00A7E1] hover:bg-[#0089b8]"
-                                      onClick={() => handleReply(comment.id)}
-                                      disabled={!replyText.trim()}
-                                    >
-                                      <Send className="h-4 w-4 mr-1" /> Responder
-                                    </Button>
-                                    <Button variant="outline" size="sm" onClick={() => setReplyingTo(null)}>
-                                      Cancelar
-                                    </Button>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Respostas a este comentário */}
-                              {comment.replies && comment.replies.length > 0 && (
-                                <div className="mt-4 pl-4 border-l-2 border-gray-200 space-y-4">
-                                  {comment.replies.map((reply: any) => (
-                                    <div key={reply.id} className="bg-gray-50 p-4 rounded-lg">
-                                      <div className="flex items-start gap-3">
-                                        <Avatar className="h-8 w-8 border-2 border-white shadow-sm">
-                                          <AvatarImage src={reply.image || "/placeholder.svg"} alt={reply.author} />
-                                          <AvatarFallback>{reply.author.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex-1">
-                                          <div className="flex justify-between flex-wrap gap-2">
-                                            <div>
-                                              <h5 className="font-bold text-sm">{reply.author}</h5>
-                                              <p className="text-gray-500 text-xs">{reply.date}</p>
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
-                                                <ThumbsUp className="h-3 w-3 text-gray-500 hover:text-[#00A7E1]" />
-                                              </Button>
-                                              <span className="text-xs text-gray-500">{reply.likes}</span>
-                                            </div>
-                                          </div>
-                                          <p className="my-2 text-sm">{reply.content}</p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
+                          <div className="p-4">
+                            <h4 className="font-bold text-lg mb-2 line-clamp-2">{relatedPost.title}</h4>
+                            <div className="flex items-center text-sm text-gray-500">
+                              <Calendar className="h-3 w-3 mr-1" />
+                              <span>{relatedPost.date}</span>
                             </div>
                           </div>
                         </motion.div>
-                      ))
-                    ) : (
-                      <div className="text-center py-10 bg-gray-50 rounded-xl">
-                        <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                        <p className="text-gray-500 mb-4">Seja o primeiro a comentar neste artigo!</p>
-                        <Button
-                          className="bg-[#00A7E1] hover:bg-[#0089b8]"
-                          onClick={() => document.querySelector("textarea")?.focus()}
-                        >
-                          Deixar um comentário
-                        </Button>
-                      </div>
-                    )}
+                      </Link>
+                    ))}
                   </div>
                 </div>
-              </TabsContent>
-            </Tabs>
-          </div>
+              )}
+            </article>
+          </AnimateOnScroll>
+        </div>
 
-          {/* Barra lateral */}
-          <div className="lg:w-1/3">
-            <div className="sticky top-24 space-y-8">
-              {/* Botões de interação */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
-              >
-                <h4 className="font-bold mb-4">Interações</h4>
-                <div className="flex flex-col gap-3">
-                  <Button
-                    variant={hasLiked ? "default" : "outline"}
-                    className={`flex justify-between w-full ${hasLiked ? "bg-[#00A7E1] hover:bg-[#0089b8]" : ""}`}
-                    onClick={handleLike}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Heart className={`h-4 w-4 ${hasLiked ? "fill-white" : ""}`} />
-                      <span>{hasLiked ? "Curtido" : "Curtir"}</span>
-                    </div>
-                    <span>{likeCount}</span>
-                  </Button>
-                  <Button
-                    variant={isSaved ? "default" : "outline"}
-                    className={`flex justify-between w-full ${isSaved ? "bg-[#00A7E1] hover:bg-[#0089b8]" : ""}`}
-                    onClick={toggleSavePost}
-                  >
-                    <div className="flex items-center gap-2">
-                      {isSaved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-                      <span>{isSaved ? "Salvo" : "Salvar"}</span>
-                    </div>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex justify-between w-full"
-                    onClick={() => setActiveTab("comentarios")}
-                  >
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="h-4 w-4" />
-                      <span>Comentar</span>
-                    </div>
-                    <span>{comments.length}</span>
-                  </Button>
-                </div>
-              </motion.div>
-
-              {/* CTA Newsletter */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-gradient-to-br from-[#00A7E1] to-[#0089b8] text-white rounded-xl p-6 shadow-lg"
-              >
-                <h4 className="font-bold text-xl mb-2">Inscreva-se na Newsletter</h4>
-                <p className="text-white/90 text-sm mb-4">
-                  Receba as últimas novidades sobre contabilidade e gestão financeira.
-                </p>
-                <div className="space-y-3">
-                  <Input
-                    placeholder="Seu email"
-                    className="bg-white/10 border-white/20 placeholder:text-white/60 text-white focus:ring-white/50"
-                  />
-                  <Button className="w-full bg-white text-[#00A7E1] hover:bg-white/90 font-medium">Inscrever-se</Button>
-                </div>
-              </motion.div>
-
-              {/* Tags */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
-              >
-                <h4 className="font-bold mb-4">Tags Populares</h4>
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag: string, index: number) => (
-                    <Link key={index} href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}>
-                      <Badge variant="outline" className="hover:bg-gray-100 transition-colors py-1.5 px-3">
-                        {tag}
-                      </Badge>
-                    </Link>
-                  ))}
-                  <Link href="/blog/tags">
-                    <Badge variant="outline" className="hover:bg-gray-100 transition-colors py-1.5 px-3 bg-gray-50">
-                      Ver todas
-                    </Badge>
-                  </Link>
-                </div>
-              </motion.div>
-            </div>
-          </div>
+        <div className="space-y-12">
+          <BlogCategories />
+          <BlogNewsletter />
         </div>
       </div>
-      <Footer />
-    </>
+    </div>
   )
 }

@@ -1,17 +1,26 @@
 "use client"
-import AnimateOnScroll from "@/components/shared/animate-on-scroll"
-import { useRouter } from "next/navigation"
+
+import type React from "react"
+
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import AnimateOnScroll from "@/components/shared/animate-on-scroll"
+import { motion } from "framer-motion"
+import { Search, TrendingUp } from "lucide-react"
 
 export default function BlogHero() {
-  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const router = useRouter()
 
-  const handleSearch = () => {
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
     if (searchQuery.trim()) {
-      router.push(`/blog/search?q=${encodeURIComponent(searchQuery)}`)
+      router.push(`/blog/search?q=${encodeURIComponent(searchQuery.trim())}`)
     }
   }
+
+  const trendingTopics = ["Simples Nacional", "MEI", "Imposto de Renda", "eSocial", "Notas Fiscais"]
 
   return (
     <section className="w-full py-16 md:py-24 bg-white relative overflow-hidden">
@@ -39,29 +48,53 @@ export default function BlogHero() {
 
           <AnimateOnScroll variant="fade-up" delay={200} duration={0.8}>
             <div className="mt-8 w-full max-w-md">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Pesquisar artigos..."
-                  className="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00A7E1]/20 focus:border-[#00A7E1]"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                />
-                <button 
-                  onClick={handleSearch}
-                  className="absolute right-1 top-1 bg-[#00A7E1] text-white p-2 rounded-full hover:bg-[#0089b8] transition-colors duration-300"
+              <form onSubmit={handleSearch} className="relative">
+                <motion.div
+                  animate={{
+                    boxShadow: isSearchFocused
+                      ? "0 10px 25px -5px rgba(0, 167, 225, 0.1), 0 8px 10px -6px rgba(0, 167, 225, 0.1)"
+                      : "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+                  }}
+                  className="relative rounded-full"
                 >
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
+                  <input
+                    type="text"
+                    placeholder="Pesquisar artigos..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setIsSearchFocused(false)}
+                    className="w-full px-5 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00A7E1]/20 focus:border-[#00A7E1] pr-12"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-1 top-1 bg-[#00A7E1] text-white p-2 rounded-full hover:bg-[#0089b8] transition-colors duration-300"
+                    aria-label="Pesquisar"
+                  >
+                    <Search className="h-5 w-5" />
+                  </button>
+                </motion.div>
+              </form>
+            </div>
+
+            <div className="mt-6 flex flex-wrap justify-center gap-2 items-center">
+              <span className="text-sm text-gray-500 flex items-center">
+                <TrendingUp className="h-4 w-4 mr-1" /> Tópicos em alta:
+              </span>
+              {trendingTopics.map((topic, index) => (
+                <motion.button
+                  key={topic}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * index + 0.5 }}
+                  className="text-xs bg-gray-100 hover:bg-[#00A7E1]/10 hover:text-[#00A7E1] px-3 py-1 rounded-full transition-colors"
+                  onClick={() => router.push(`/blog/tag/${topic.toLowerCase().replace(/\s+/g, "-")}`)}
+                >
+                  {topic}
+                </motion.button>
+              ))}
             </div>
           </AnimateOnScroll>
         </div>
