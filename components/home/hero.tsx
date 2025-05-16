@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useState, useMemo } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 import { ArrowRight, BarChart2, CheckCircle, Shield } from 'lucide-react'
 import { TypeAnimation } from "react-type-animation"
 import { useMediaQuery } from "@/hooks/use-media-query"
@@ -14,52 +14,100 @@ type CountUpType = {
   suffix: string
 }
 
+const benefitTabs = [
+  {
+    title: "Economia Fiscal",
+    icon: <BarChart2 className="h-4 w-4 sm:h-5 sm:w-5" />,
+    description: "Reduza até 32% em impostos com nosso planejamento tributário estratégico",
+    color: "#00A7E1",
+  },
+  {
+    title: "Segurança Contábil",
+    icon: <Shield className="h-4 w-4 sm:h-5 sm:w-5" />,
+    description: "Documentação 100% em conformidade com a legislação vigente",
+    color: "#4CAF50",
+  },
+  {
+    title: "Atendimento Premium",
+    icon: <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />,
+    description: "Suporte dedicado com resposta em até 4 horas úteis",
+    color: "#FF9800",
+  },
+]
+
+const placeholderImages = Array.from({ length: 3 }, (_, i) => ({
+  id: i + 1,
+  src: `/placeholder.svg?height=40&width=40&text=${i + 1}`
+}))
+
 export default function Hero() {
   const [activeTab, setActiveTab] = useState(0)
-  const [isClient, setIsClient] = useState(false)
   const isMobile = useMediaQuery("(max-width: 768px)")
-
-  const benefitTabs = [
-    {
-      title: "Economia Fiscal",
-      icon: <BarChart2 className="h-4 w-4 sm:h-5 sm:w-5" />,
-      description: "Reduza até 32% em impostos com nosso planejamento tributário estratégico",
-      color: "#00A7E1",
-    },
-    {
-      title: "Segurança Contábil",
-      icon: <Shield className="h-4 w-4 sm:h-5 sm:w-5" />,
-      description: "Documentação 100% em conformidade com a legislação vigente",
-      color: "#4CAF50",
-    },
-    {
-      title: "Atendimento Premium",
-      icon: <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />,
-      description: "Suporte dedicado com resposta em até 4 horas úteis",
-      color: "#FF9800",
-    },
-  ]
+  const prefersReducedMotion = useReducedMotion()
+  
+  // Otimização: Evitar re-render desnecessário do TypeAnimation
+  const typeAnimationSequence = useMemo(() => [
+    "negócio crescer",
+    2000,
+    "MEI prosperar",
+    2000,
+    "e-commerce expandir",
+    2000,
+    "futuro garantir",
+    2000,
+  ], [])
 
   useEffect(() => {
-    setIsClient(true)
-
     const interval = setInterval(() => {
-      setActiveTab((prev) => (prev + 1) % benefitTabs.length)
+      setActiveTab(prev => (prev + 1) % benefitTabs.length)
     }, 4000)
 
     return () => clearInterval(interval)
   }, [])
 
-  if (!isClient) {
-    return null
+  const scrollTo = (id: string) => {
+    document.querySelector(`#${id}`)?.scrollIntoView({ behavior: "smooth" })
   }
 
-  // Mobile version - completely different approach
+  // Componente otimizado para CountUp
+  const CountUp = ({ end, duration = 2, suffix = "" }: CountUpType) => {
+    const [count, setCount] = useState(0)
+
+    useEffect(() => {
+      if (prefersReducedMotion) {
+        setCount(end)
+        return
+      }
+
+      let start = 0
+      const increment = end / (duration * 60) // 60fps
+
+      const timer = setInterval(() => {
+        start += increment
+        if (start >= end) {
+          setCount(end)
+          clearInterval(timer)
+        } else {
+          setCount(Math.floor(start))
+        }
+      }, 1000 / 60)
+
+      return () => clearInterval(timer)
+    }, [end, duration, prefersReducedMotion])
+
+    return (
+      <span>
+        {count}
+        {suffix}
+      </span>
+    )
+  }
+
   if (isMobile) {
     return (
       <section className="w-full pt-20 pb-10 bg-gradient-to-b from-white to-gray-50">
         <div className="container px-4 mx-auto">
-          {/* Mobile Header */}
+          {/* Header Mobile Otimizado */}
           <div className="text-center mb-6">
             <div className="inline-block bg-[#00A7E1]/10 text-[#00A7E1] px-3 py-1 rounded-full text-xs font-medium mb-3">
               Contabilidade Digital
@@ -69,19 +117,10 @@ export default function Hero() {
               Soluções contábeis para o seu{" "}
               <span className="text-[#00A7E1]">
                 <TypeAnimation
-                  sequence={[
-                    "negócio crescer",
-                    2000,
-                    "MEI prosperar",
-                    2000,
-                    "e-commerce expandir",
-                    2000,
-                    "futuro garantir",
-                    2000,
-                  ]}
+                  sequence={typeAnimationSequence}
                   wrapper="span"
                   speed={50}
-                  repeat={Number.POSITIVE_INFINITY}
+                  repeat={Infinity}
                 />
               </span>
             </h1>
@@ -92,34 +131,26 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* Mobile Image - Single clean image */}
-          <div className="relative w-full h-48 mb-6 rounded-lg overflow-hidden shadow-md">
+          {/* Imagem Mobile com lazy loading */}
+          <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden shadow-md">
             <Image
               src="/img/home/gestao.jpg"
               alt="Contabilidade Digital"
               fill
               className="object-cover object-center"
               priority
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              placeholder="blur"
+              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwMCI+TG9hZGluZy4uLjwvdGV4dD48L3N2Zz4="
             />
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#00A7E1]/30 to-transparent"></div>
-            
-            {/* Simple badge overlay */}
-            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm text-xs font-medium">
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                <span>Tecnologia Avançada</span>
-              </div>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#00A7E1]/30 to-transparent" />
           </div>
 
-          {/* Mobile CTA Buttons */}
+          {/* Botões CTA Mobile */}
           <div className="flex flex-col gap-2 mb-6">
             <Button
               className="bg-[#00A7E1] hover:bg-[#0089b8] text-white w-full"
-              onClick={() => {
-                document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })
-              }}
+              onClick={() => scrollTo("contact")}
               size="sm"
             >
               <span className="flex items-center">
@@ -131,16 +162,14 @@ export default function Hero() {
             <Button
               variant="outline"
               className="border-[#00A7E1] text-[#00A7E1] hover:bg-[#e6f7fd] w-full"
-              onClick={() => {
-                document.querySelector("#services")?.scrollIntoView({ behavior: "smooth" })
-              }}
+              onClick={() => scrollTo("services")}
               size="sm"
             >
               Conheça Nossos Serviços
             </Button>
           </div>
 
-          {/* Mobile Benefits Tabs - Simplified */}
+          {/* Abas de Benefícios - Versão simplificada */}
           <div className="bg-white rounded-lg p-4 shadow-md mb-6">
             <h3 className="text-sm font-medium mb-3 text-gray-800">Nossos diferenciais</h3>
             
@@ -148,14 +177,14 @@ export default function Hero() {
               {benefitTabs.map((tab, index) => (
                 <div 
                   key={index}
-                  className={`p-3 rounded-md ${activeTab === index ? 'bg-[#00A7E1]/10' : 'bg-gray-50'}`}
+                  className={`p-3 rounded-md transition-colors ${activeTab === index ? 'bg-[#00A7E1]/10' : 'bg-gray-50'}`}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <div 
                       className="w-6 h-6 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: `${tab.color}20` }}
                     >
-                      <span style={{ color: tab.color }}>{tab.icon}</span>
+                      {tab.icon}
                     </div>
                     <h4 className="text-sm font-medium" style={{ color: tab.color }}>
                       {tab.title}
@@ -167,17 +196,18 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Mobile Social Proof - Simplified */}
+          {/* Prova Social Mobile */}
           <div className="flex items-center justify-center gap-3 bg-white/80 rounded-lg p-3 shadow-sm">
             <div className="flex -space-x-2">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="w-7 h-7 rounded-full border-2 border-white overflow-hidden">
+              {placeholderImages.map((img) => (
+                <div key={img.id} className="w-7 h-7 rounded-full border-2 border-white overflow-hidden">
                   <Image
-                    src={`/placeholder.svg?height=40&width=40&text=${i}`}
-                    alt={`Cliente ${i}`}
+                    src={img.src}
+                    alt={`Cliente ${img.id}`}
                     width={28}
                     height={28}
                     className="object-cover"
+                    loading="lazy"
                   />
                 </div>
               ))}
@@ -185,9 +215,9 @@ export default function Hero() {
             <div>
               <p className="text-xs font-medium">+500 clientes satisfeitos</p>
               <div className="flex items-center">
-                {[1, 2, 3, 4, 5].map((star) => (
+                {[...Array(5)].map((_, i) => (
                   <svg
-                    key={star}
+                    key={i}
                     className="w-3 h-3 text-yellow-400"
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -204,10 +234,10 @@ export default function Hero() {
     )
   }
 
-  // Desktop version - original design
+  // Versão Desktop Otimizada
   return (
-    <section className="w-full py-12 md:py-16 lg:py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-visible">
-      {/* Subtle background pattern */}
+    <section className="w-full py-12 md:py-16 lg:py-20 bg-gradient-to-b from-white to-gray-50 relative">
+      {/* Padrão de fundo otimizado */}
       <div className="absolute inset-0 z-0 opacity-10">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -220,43 +250,14 @@ export default function Hero() {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            className="absolute -top-20 -right-20 w-64 h-64 bg-[#00A7E1]/5 rounded-full blur-3xl"
-            animate={{
-              x: [0, 10, 0],
-              y: [0, -10, 0],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute top-40 -left-20 w-72 h-72 bg-[#00A7E1]/10 rounded-full blur-3xl"
-            animate={{
-              x: [0, -10, 0],
-              y: [0, 10, 0],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              delay: 1,
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-8 items-center relative z-10">
-          {/* Content Column */}
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+          {/* Coluna de Conteúdo */}
           <div className="lg:col-span-7 flex flex-col justify-center space-y-4 sm:space-y-6 text-center lg:text-left">
             <motion.div
-              className="inline-block bg-[#00A7E1]/10 text-[#00A7E1] px-3 py-1 rounded-full text-xs sm:text-sm font-medium mb-2 mx-auto lg:mx-0"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
+              className="inline-block bg-[#00A7E1]/10 text-[#00A7E1] px-3 py-1 rounded-full text-xs sm:text-sm font-medium mb-2 mx-auto lg:mx-0"
             >
               Contabilidade Digital
             </motion.div>
@@ -270,37 +271,30 @@ export default function Hero() {
               <span className="block">Soluções contábeis para o seu</span>
               <span className="text-[#00A7E1] relative inline-block">
                 <TypeAnimation
-                  sequence={[
-                    "negócio crescer",
-                    2000,
-                    "MEI prosperar",
-                    2000,
-                    "e-commerce expandir",
-                    2000,
-                    "futuro garantir",
-                    2000,
-                  ]}
+                  sequence={typeAnimationSequence}
                   wrapper="span"
                   speed={50}
-                  repeat={Number.POSITIVE_INFINITY}
+                  repeat={Infinity}
                   className="text-3xl md:text-4xl xl:text-5xl"
                 />
-                <motion.svg
-                  className="absolute -bottom-2 left-0 w-full"
-                  viewBox="0 0 200 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ delay: 1, duration: 1.5, ease: "easeInOut" }}
-                >
-                  <path
-                    d="M1 5.5C47.6667 1.5 154.4 -1.9 199 5.5"
-                    stroke="#00A7E1"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </motion.svg>
+                {!prefersReducedMotion && (
+                  <motion.svg
+                    className="absolute -bottom-2 left-0 w-full"
+                    viewBox="0 0 200 8"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ delay: 1, duration: 1.5, ease: "easeInOut" }}
+                  >
+                    <path
+                      d="M1 5.5C47.6667 1.5 154.4 -1.9 199 5.5"
+                      stroke="#00A7E1"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </motion.svg>
+                )}
               </span>
             </motion.h1>
 
@@ -323,9 +317,7 @@ export default function Hero() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   className="bg-[#00A7E1] hover:bg-[#0089b8] text-white relative overflow-hidden group"
-                  onClick={() => {
-                    document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })
-                  }}
+                  onClick={() => scrollTo("contact")}
                 >
                   <span className="relative z-10 flex items-center">
                     Solicitar Orçamento
@@ -338,9 +330,7 @@ export default function Hero() {
                 <Button
                   variant="outline"
                   className="border-[#00A7E1] text-[#00A7E1] hover:bg-[#e6f7fd] group"
-                  onClick={() => {
-                    document.querySelector("#services")?.scrollIntoView({ behavior: "smooth" })
-                  }}
+                  onClick={() => scrollTo("services")}
                 >
                   <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
                     Conheça Nossos Serviços
@@ -349,7 +339,7 @@ export default function Hero() {
               </motion.div>
             </motion.div>
 
-            {/* Benefit tabs */}
+            {/* Abas de Benefícios */}
             <motion.div
               className="mt-4 bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -391,7 +381,7 @@ export default function Hero() {
               </div>
             </motion.div>
 
-            {/* Social proof */}
+            {/* Prova Social */}
             <motion.div
               className="flex items-center justify-center lg:justify-start gap-3 mt-4"
               initial={{ opacity: 0, y: 20 }}
@@ -399,14 +389,15 @@ export default function Hero() {
               transition={{ delay: 1.2 }}
             >
               <div className="flex -space-x-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden">
+                {placeholderImages.map((img) => (
+                  <div key={img.id} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden">
                     <Image
-                      src={`/placeholder.svg?height=40&width=40&text=${i}`}
-                      alt={`Cliente ${i}`}
+                      src={img.src}
+                      alt={`Cliente ${img.id}`}
                       width={32}
                       height={32}
                       className="object-cover"
+                      loading="lazy"
                     />
                   </div>
                 ))}
@@ -414,9 +405,9 @@ export default function Hero() {
               <div className="text-sm">
                 <p className="font-medium">+500 clientes satisfeitos</p>
                 <div className="flex items-center">
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[...Array(5)].map((_, i) => (
                     <svg
-                      key={star}
+                      key={i}
                       className="w-3 h-3 text-yellow-400"
                       fill="currentColor"
                       viewBox="0 0 20 20"
@@ -430,7 +421,7 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Image Column */}
+          {/* Coluna de Imagem */}
           <div className="lg:col-span-5 mt-6 lg:mt-0">
             <motion.div
               className="relative mx-auto"
@@ -439,7 +430,7 @@ export default function Hero() {
               transition={{ delay: 0.5, duration: 0.8 }}
             >
               <div className="relative h-[340px] lg:h-[420px]">
-                {/* Main image with hexagon clip path */}
+                {/* Imagem principal com clip-path */}
                 <motion.div
                   className="absolute top-0 right-0 w-[80%] h-[80%] overflow-hidden shadow-xl"
                   style={{
@@ -458,12 +449,14 @@ export default function Hero() {
                       className="object-cover object-center"
                       priority
                       sizes="(max-width: 768px) 100vw, 50vw"
+                      placeholder="blur"
+                      blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwMCI+TG9hZGluZy4uLjwvdGV4dD48L3N2Zz4="
                     />
                     <div className="absolute inset-0 bg-gradient-to-tr from-[#00A7E1]/30 to-transparent"></div>
                   </div>
                 </motion.div>
 
-                {/* Secondary image - circular */}
+                {/* Imagem secundária */}
                 <motion.div
                   className="absolute bottom-0 left-0 w-[45%] h-[45%] rounded-full overflow-hidden border-4 border-white shadow-lg"
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -476,11 +469,12 @@ export default function Hero() {
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 40vw, 20vw"
+                    placeholder="blur"
+                    blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwMCI+TG9hZGluZy4uLjwvdGV4dD48L3N2Zz4="
                   />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00A7E1]/20"></div>
                 </motion.div>
 
-                {/* Decorative elements */}
+                {/* Elemento decorativo - Economia */}
                 <motion.div
                   className="absolute top-[40%] left-[35%] w-[20%] h-[20%] bg-white rounded-lg shadow-lg flex items-center justify-center p-2 z-10"
                   initial={{ opacity: 0, y: 20 }}
@@ -494,7 +488,7 @@ export default function Hero() {
                   </div>
                 </motion.div>
 
-                {/* Floating technology badge */}
+                {/* Badge de Tecnologia */}
                 <motion.div
                   className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-md z-20"
                   initial={{ opacity: 0, scale: 0 }}
@@ -507,7 +501,7 @@ export default function Hero() {
                   </div>
                 </motion.div>
 
-                {/* Floating card with stats */}
+                {/* Card com estatísticas */}
                 <motion.div
                   className="absolute -bottom-3 right-4 bg-white rounded-lg shadow-md p-2 z-20"
                   initial={{ opacity: 0, y: 20 }}
@@ -544,47 +538,7 @@ export default function Hero() {
             </motion.div>
           </div>
         </div>
-
-        {/* Modern wave divider */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden">
-          <svg className="w-full h-auto" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path
-              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-              fill="#f9fafb"
-            ></path>
-          </svg>
-        </div>
       </div>
     </section>
-  )
-}
-
-function CountUp({ end, duration = 2, suffix = "" }: CountUpType) {
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    let startTime: number
-    let animationFrame: number
-
-    const updateCount = (timestamp: number) => {
-      if (!startTime) startTime = timestamp
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
-      setCount(Math.floor(progress * end))
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(updateCount)
-      }
-    }
-
-    animationFrame = requestAnimationFrame(updateCount)
-
-    return () => cancelAnimationFrame(animationFrame)
-  }, [end, duration])
-
-  return (
-    <span>
-      {count}
-      {suffix}
-    </span>
   )
 }
