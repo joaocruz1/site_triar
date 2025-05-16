@@ -1,50 +1,52 @@
 import type { Metadata } from "next"
-import Header from "@/components/layout/header"
-import Footer from "@/components/layout/footer"
 import BlogPosts from "@/components/blog/blog-posts"
 import BlogCategories from "@/components/blog/blog-categories"
+import BlogHero from "@/components/blog/blog-hero"
 import BlogNewsletter from "@/components/blog/blog-newsletter"
 import AnimatedBackground from "@/components/shared/animated-background"
+import { getBlogPostsByCategory, getCategories } from "@/lib/blog"
+import NotFound from "../../[slug]/not-found"
+
 
 type Props = {
   params: Promise<{ category: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-// Fix the generateMetadata function to handle undefined values
-export async function generateMetadata(props: Props): Promise<Metadata> {
+export async function generateMetadata(props : Props): Promise<Metadata> {
   const params = await props.params
-  const category = params.category || ""
-  // Safely format the category with a fallback
-  const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1)
+  const category = params.category
+  const decodedCategory = decodeURIComponent(category)
+  const posts = getBlogPostsByCategory(decodedCategory)
+
+  if (posts.length === 0) {
+    return {
+      title: "Categoria não encontrada - Triar Contabilidade",
+      description: "A categoria que você está procurando não foi encontrada.",
+    }
+  }
 
   return {
-    title: `${formattedCategory} | Blog Triar Contabilidade`,
-    description: `Artigos sobre ${formattedCategory.toLowerCase()} - Triar Contabilidade`,
+    title: `${decodedCategory} - Blog Triar Contabilidade`,
+    description: `Artigos sobre ${decodedCategory} - Dicas, novidades e informações para sua empresa.`,
   }
 }
 
-export default async function CategoryPage(props: Props) {
+export default async function CategoryPage(props : Props) {
   const params = await props.params
   const category = params.category
+  const decodedCategory = decodeURIComponent(category)
+  const posts = getBlogPostsByCategory(decodedCategory)
+  const categories = getCategories()
+
+  if (posts.length === 0) {
+    NotFound()
+  }
 
   return (
-      <main className="min-h-screen">
-        <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
-        <Header />
-        <div className="container px-4 md:px-6 py-12 md:py-24">
-          <h1 className="text-3xl font-bold mb-8">Categoria: {category}</h1>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2">
-              <BlogPosts initialFilter={category} />
-            </div>
-            <div className="space-y-12">
-              <BlogCategories />
-              <BlogNewsletter />
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </main>
+    <main className="min-h-screen">
+      <BlogCategories categories={categories} activeCategory={decodedCategory} />
+      <BlogPosts posts={posts} />
+    </main>
   )
 }

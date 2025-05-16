@@ -5,6 +5,9 @@ import BlogPosts from "@/components/blog/blog-posts"
 import BlogCategories from "@/components/blog/blog-categories"
 import BlogNewsletter from "@/components/blog/blog-newsletter"
 import AnimatedBackground from "@/components/shared/animated-background"
+import NotFound from "../../[slug]/not-found"
+import { getBlogPostsByTag, getCategories, getTags } from "@/lib/blog"
+import { notFound } from "next/navigation"
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -24,27 +27,30 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 }
 
+export async function generateStaticParams() {
+  const tags = getTags()
+
+  return tags.map((tag) => ({
+    tag: encodeURIComponent(tag.toLowerCase()),
+  }))
+}
+
 export default async function TagPage(props: Props) {
   const params = await props.params
-  const slug = params.slug
+  const tag = params.slug
+  const decodedTag = decodeURIComponent(tag)
+  const posts = getBlogPostsByTag(decodedTag)
+  const categories = getCategories()
+
+  if (posts.length === 0) {
+    notFound()
+  }
 
   return (
-      <main className="min-h-screen">
-        <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
-        <Header />
-        <div className="container px-4 md:px-6 py-12 md:py-24">
-          <h1 className="text-3xl font-bold mb-8">Tag: {slug}</h1>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2">
-              <BlogPosts initialFilter={slug} />
-            </div>
-            <div className="space-y-12">
-              <BlogCategories />
-              <BlogNewsletter />
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </main>
+    <main className="min-h-screen">
+      <BlogCategories categories={categories} />
+      <BlogPosts posts={posts} />
+    </main>
   )
 }
+
