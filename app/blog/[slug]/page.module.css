@@ -5,6 +5,14 @@
   line-height: 1.7;
 }
 
+.content h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #111827;
+}
+
 .content h2 {
   font-size: 1.75rem;
   font-weight: 700;
@@ -17,6 +25,14 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  color: #111827;
+}
+
+.content h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   color: #111827;
 }
@@ -40,6 +56,15 @@
 .content ol {
   margin-left: 1.5rem;
   margin-bottom: 1.25rem;
+  padding-left: 1rem;
+}
+
+.content ul {
+  list-style-type: disc;
+}
+
+.content ol {
+  list-style-type: decimal;
 }
 
 .content li {
@@ -61,6 +86,9 @@
   font-style: italic;
   color: #6b7280;
   margin-bottom: 1.25rem;
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
 }
 
 .content pre {
@@ -95,11 +123,23 @@
 
 /* Ajustes para mobile */
 @media (max-width: 768px) {
+  .content h1 {
+    font-size: 1.75rem;
+  }
+
   .content h2 {
     font-size: 1.5rem;
   }
 
   .content h3 {
     font-size: 1.25rem;
+  }
+
+  .content h4 {
+    font-size: 1.125rem;
+  }
+
+  .content {
+    padding: 1rem;
   }
 }

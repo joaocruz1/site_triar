@@ -1,11 +1,8 @@
 import type { Metadata } from "next"
-import Header from "@/components/layout/header"
-import Footer from "@/components/layout/footer"
 import BlogPosts from "@/components/blog/blog-posts"
 import BlogCategories from "@/components/blog/blog-categories"
 import BlogNewsletter from "@/components/blog/blog-newsletter"
 import AnimatedBackground from "@/components/shared/animated-background"
-import NotFound from "../../[slug]/not-found"
 import { getBlogPostsByTag, getCategories, getTags } from "@/lib/blog"
 import { notFound } from "next/navigation"
 
@@ -47,10 +44,20 @@ export default async function TagPage(props: Props) {
   }
 
   return (
-    <main className="min-h-screen">
-      <BlogCategories categories={categories} />
-      <BlogPosts posts={posts} />
-    </main>
+      <main className="min-h-screen">
+        <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
+        <div className="container px-4 md:px-6 py-12 md:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2">
+              <BlogPosts initialFilter={decodedTag} />
+            </div>
+            <div className="space-y-12">
+              <BlogCategories />
+              <BlogNewsletter />
+            </div>
+          </div>
+        </div>
+      </main>
   )
 }
 

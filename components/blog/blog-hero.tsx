@@ -8,7 +8,13 @@ import AnimateOnScroll from "@/components/shared/animate-on-scroll"
 import { motion } from "framer-motion"
 import { Search, TrendingUp } from "lucide-react"
 
-export default function BlogHero() {
+export default function BlogHero({
+  title = "Conhecimento Contábil",
+  subtitle = "Artigos, dicas e novidades sobre contabilidade, finanças, tributação e gestão empresarial para ajudar você a tomar as melhores decisões para o seu negócio.",
+}: {
+  title?: string
+  subtitle?: string
+}) {
   const [searchQuery, setSearchQuery] = useState("")
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const router = useRouter()
@@ -37,12 +43,16 @@ export default function BlogHero() {
                 Blog
               </div>
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                Conhecimento <span className="text-[#00A7E1]">Contábil</span>
+                {title.includes("Contábil") ? (
+                  <>
+                    {title.split("Contábil")[0]} <span className="text-[#00A7E1]">Contábil</span>
+                    {title.split("Contábil")[1]}
+                  </>
+                ) : (
+                  title
+                )}
               </h1>
-              <p className="text-gray-500 md:text-xl max-w-[700px] mx-auto">
-                Artigos, dicas e novidades sobre contabilidade, finanças, tributação e gestão empresarial para ajudar
-                você a tomar as melhores decisões para o seu negócio.
-              </p>
+              <p className="text-gray-500 md:text-xl max-w-[700px] mx-auto">{subtitle}</p>
             </div>
           </AnimateOnScroll>
 
