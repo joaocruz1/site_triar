@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { getCategories } from "@/lib/blog"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -15,18 +16,8 @@ export default function BlogHero({
   title?: string
   subtitle?: string
 }) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isSearchFocused, setIsSearchFocused] = useState(false)
   const router = useRouter()
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/blog/search?q=${encodeURIComponent(searchQuery.trim())}`)
-    }
-  }
-
-  const trendingTopics = ["Simples Nacional", "MEI", "Imposto de Renda", "eSocial", "Notas Fiscais"]
+  const trendingTopics = getCategories()
 
   return (
     <section className="w-full py-16 md:py-24 bg-white relative overflow-hidden">
@@ -57,35 +48,7 @@ export default function BlogHero({
           </AnimateOnScroll>
 
           <AnimateOnScroll variant="fade-up" delay={200} duration={0.8}>
-            <div className="mt-8 w-full max-w-md">
-              <form onSubmit={handleSearch} className="relative">
-                <motion.div
-                  animate={{
-                    boxShadow: isSearchFocused
-                      ? "0 10px 25px -5px rgba(0, 167, 225, 0.1), 0 8px 10px -6px rgba(0, 167, 225, 0.1)"
-                      : "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-                  }}
-                  className="relative rounded-full"
-                >
-                  <input
-                    type="text"
-                    placeholder="Pesquisar artigos..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setIsSearchFocused(false)}
-                    className="w-full px-5 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00A7E1]/20 focus:border-[#00A7E1] pr-12"
-                  />
-                  <button
-                    type="submit"
-                    className="absolute right-1 top-1 bg-[#00A7E1] text-white p-2 rounded-full hover:bg-[#0089b8] transition-colors duration-300"
-                    aria-label="Pesquisar"
-                  >
-                    <Search className="h-5 w-5" />
-                  </button>
-                </motion.div>
-              </form>
-            </div>
+
 
             <div className="mt-6 flex flex-wrap justify-center gap-2 items-center">
               <span className="text-sm text-gray-500 flex items-center">
@@ -100,7 +63,7 @@ export default function BlogHero({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index + 0.5 }}
                   className="text-xs bg-gray-100 hover:bg-[#00A7E1]/10 hover:text-[#00A7E1] px-3 py-1 rounded-full transition-colors"
-                  onClick={() => router.push(`/blog/tag/${topic.toLowerCase().replace(/\s+/g, "-")}`)}
+                  onClick={() => router.push(`/blog/tag/${encodeURIComponent(topic.toLowerCase())}`)}
                 >
                   {topic}
                 </motion.button>

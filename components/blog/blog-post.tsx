@@ -48,7 +48,7 @@ export default function BlogPostComponent({ post }: BlogPostComponentProps) {
         <AnimateOnScroll variant="fade-up" delay={200} duration={0.8}>
           <div className="relative w-full h-96 mb-10 rounded-xl overflow-hidden shadow-lg">
             <Image
-              src={post.image || "/placeholder.svg?height=400&width=800"}
+              src={post.image}
               alt={post.title}
               fill
               className="object-cover"

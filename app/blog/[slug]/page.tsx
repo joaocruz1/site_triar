@@ -3,7 +3,6 @@ import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import BlogPost from "@/components/blog/blog-post"
 import AnimatedBackground from "@/components/shared/animated-background"
-import NotFound from "./not-found"
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/blog"
 import { notFound } from "next/navigation"
 

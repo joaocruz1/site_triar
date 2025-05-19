@@ -4,7 +4,10 @@ import BlogCategories from "@/components/blog/blog-categories"
 import BlogNewsletter from "@/components/blog/blog-newsletter"
 import AnimatedBackground from "@/components/shared/animated-background"
 import { getBlogPostsByTag, getCategories, getTags } from "@/lib/blog"
-import { notFound } from "next/navigation"
+import NotFound from "../../[slug]/not-found"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import BlogHero from "@/components/blog/blog-hero"
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -40,12 +43,14 @@ export default async function TagPage(props: Props) {
   const categories = getCategories()
 
   if (posts.length === 0) {
-    notFound()
+    NotFound()
   }
 
   return (
       <main className="min-h-screen">
         <AnimatedBackground color="rgba(0, 167, 225, 0.1)" density={15} />
+        <Header />
+        <BlogHero />
         <div className="container px-4 md:px-6 py-12 md:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2">
@@ -57,6 +62,7 @@ export default async function TagPage(props: Props) {
             </div>
           </div>
         </div>
+        <Footer />
       </main>
   )
 }
